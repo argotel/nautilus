@@ -1,0 +1,242 @@
+/*
+ * chanwr.c
+ *
+ * SCCS ID:  @(#)chanwr.c 1.2 96/05/19
+ */
+
+#ifdef P_R_O_T_O_T_Y_P_E_S
+extern int chanwr_(integer *order, integer *ipitv, integer *irms, integer *irc, integer *ibits);
+extern int chanrd_(integer *order, integer *ipitv, integer *irms, integer *irc, integer *ibits);
+#endif
+
+/*  -- translated by f2c (version 19951025).
+   You must link the resulting object file with the libraries:
+	-lf2c -lm   (in that order)
+*/
+
+#include "f2c.h"
+
+/* *********************************************************************** */
+
+/* 	CHANL Version 49 */
+
+/* $Log: ochanwr.c,v $
+/* Revision 1.2  2001-01-25 23:45:49  jpoehlmann
+/* Version 1.7c. Identical with files on the ftp Server ftp.franken.de.
+/* (+ 1 patch in cli.c, wich is on the server too)
+/* Not compiled now
+/* */
+/* Revision 1.4  1996/07/04  15:14:57  dm */
+/* Changed loop bounds to minimize index calcuations */
+
+/* Revision 1.3  1996/03/21  15:14:57  jaf */
+/* Added comments about which indices of argument arrays are read or */
+/* written, and about the one bit of local state in CHANWR.  CHANRD */
+/* has no local state. */
+
+/* Revision 1.2  1996/03/13  18:55:10  jaf */
+/* Comments added explaining which of the local variables of this */
+/* subroutine need to be saved from one invocation to the next, and which */
+/* do not. */
+
+/* Revision 1.1  1996/02/07 14:43:31  jaf */
+/* Initial revision */
+
+
+/* *********************************************************************** */
+
+/* CHANWR: */
+/*   Place quantized parameters into bitstream */
+
+/* Input: */
+/*  ORDER  - Number of reflection coefficients (not really variable) */
+/*  IPITV  - Quantized pitch/voicing parameter */
+/*  IRMS   - Quantized energy parameter */
+/*  IRC    - Quantized reflection coefficients */
+/*           Indices 1 through ORDER read. */
+/* Output: */
+/*  IBITS  - Serial bitstream */
+/*           Indices 1 through 54 written. */
+/*           Bit 54, the SYNC bit, alternates from one call to the next. */
+
+/* Subroutine CHANWR maintains one bit of local state from one call to */
+/* the next, in the variable ISYNC.  I believe that this one bit is only */
+/* intended to allow a receiver to resynchronize its interpretation of */
+/* the bit stream, by looking for which of the 54 bits alternates every */
+/* frame time.  This is just a simple framing mechanism that is not */
+/* useful when other, higher overhead framing mechanisms are used to */
+/* transmit the coded frames. */
+
+/* I'm not going to make an entry to reinitialize this bit, since it */
+/* doesn't help a receiver much to know whether the first sync bit is a 0 */
+/* or a 1.  It needs to examine several frames in sequence to have */
+/* reasonably good assurance that its framing is correct. */
+
+
+/* CHANRD: */
+/*   Reconstruct parameters from bitstream */
+
+/* Input: */
+/*  ORDER  - Number of reflection coefficients (not really variable) */
+/*  IBITS  - Serial bitstream */
+/*           Indices 1 through 53 read (SYNC bit is ignored). */
+/* Output: */
+/*  IPITV  - Quantized pitch/voicing parameter */
+/*  IRMS   - Quantized energy parameter */
+/*  IRC    - Quantized reflection coefficients */
+/*           Indices 1 through ORDER written */
+
+/* Entry CHANRD has no local state. */
+
+
+
+/*   IBITS is 54 bits of LPC data ordered as follows: */
+/* 	R1-0, R2-0, R3-0,  P-0,  A-0, */
+/* 	R1-1, R2-1, R3-1,  P-1,  A-1, */
+/* 	R1-2, R4-0, R3-2,  A-2,  P-2, R4-1, */
+/* 	R1-3, R2-2, R3-3, R4-2,  A-3, */
+/* 	R1-4, R2-3, R3-4, R4-3,  A-4, */
+/* 	 P-3, R2-4, R7-0, R8-0,  P-4, R4-4, */
+/* 	R5-0, R6-0, R7-1,R10-0, R8-1, */
+/* 	R5-1, R6-1, R7-2, R9-0,  P-5, */
+/* 	R5-2, R6-2,R10-1, R8-2,  P-6, R9-1, */
+/* 	R5-3, R6-3, R7-3, R9-2, R8-3, SYNC */
+/*< 	SUBROUTINE CHANWR( ORDER, IPITV, IRMS, IRC, IBITS ) >*/
+/* Subroutine */ int chanwr_0_(int n__, integer *order, integer *ipitv, 
+	integer *irms, integer *irc, integer *ibits)
+{
+    /* Initialized data */
+
+    static integer isync = 0;
+    static integer bit[10] = { 2,4,8,8,8,8,16,16,16,16 };
+    static integer iblist[53] = { 13,12,11,1,2,13,12,11,1,2,13,10,11,2,1,10,
+	    13,12,11,10,2,13,12,11,10,2,1,12,7,6,1,10,9,8,7,4,6,9,8,7,5,1,9,8,
+	    4,6,1,5,9,8,7,5,6 };
+
+    /* System generated locals */
+    integer i__1;
+
+    /* Local variables */
+    integer itab[13], i__;
+
+/*       Arguments */
+/*< 	INTEGER ORDER, IPITV, IRMS, IRC(ORDER), IBITS(54) >*/
+/*       Parameters/constants */
+/*       These arrays are not Fortran PARAMETER's, but they are defined */
+/*       by DATA statements below, and their contents are never altered. 
+*/
+/*< 	INTEGER IBLIST(53), BIT(10) >*/
+/*       Local variables that need not be saved */
+/*< 	INTEGER I >*/
+/*< 	INTEGER ITAB(13) >*/
+/*       Local state */
+/*       ISYNC is only used by CHANWR, not by ENTRY CHANRD. */
+/*< 	INTEGER ISYNC >*/
+/*< 	SAVE ISYNC >*/
+/*< 	DATA ISYNC/0/ >*/
+    /* Parameter adjustments */
+    --irc;
+    --ibits;
+
+    /* Function Body */
+    switch(n__) {
+	case 1: goto L_chanrd;
+	}
+
+/*< 	DATA BIT/ 2, 4, 8, 8, 8, 8, 16, 16, 16, 16 / >*/
+/*< 	D >*/
+/* ***********************************************************************
+ */
+/* 	Place quantized parameters into bitstream */
+/* ***********************************************************************
+ */
+/*   Place parameters into ITAB */
+/*< 	ITAB(1) = IPITV >*/
+    itab[0] = *ipitv;
+/*< 	ITAB(2) = IRMS >*/
+    itab[1] = *irms;
+/*< 	ITAB(3) = 0 >*/
+    itab[2] = 0;
+/*< 	DO I = 1,ORDER >*/
+    i__1 = *order;
+    for (i__ = 0; i__ < i__1; ++i__) {
+/*< 	   ITAB(I+3) = AND( IRC(ORDER+1-I), 32767 ) >*/
+	itab[i__ + 1] = irc[*order - i__] & 32767;
+/*< 	END DO >*/
+    }
+/*   Put 54 bits into IBITS array */
+/*< 	DO I = 1,53 >*/
+    for (i__ = 0; i__ < 53; ++i__) {
+/*< 	   IBITS(I) = AND(ITAB(IBLIST(I)),1) >*/
+	ibits[i__+1] = itab[iblist[i__] - 1] & 1;
+/*< 	   ITAB(IBLIST(I)) = ITAB(IBLIST(I)) / 2 >*/
+	itab[iblist[i__] - 1] /= 2;
+/*< 	END DO >*/
+    }
+/*< 	IBITS(54) = AND(ISYNC,1) >*/
+    ibits[54] = isync & 1;
+/*< 	ISYNC = 1 - ISYNC >*/
+    isync = 1 - isync;
+/*< 	RETURN >*/
+    return 0;
+/* ***********************************************************************
+ */
+/* 	Reconstruct parameters from bitstream */
+/* ***********************************************************************
+ */
+/*< 	ENTRY CHANRD( ORDER, IPITV, IRMS, IRC, IBITS ) >*/
+
+L_chanrd:
+/*   Reconstruct ITAB */
+/*< 	DO I = 1,13 >*/
+    for (i__ = 0; i__ < 13; ++i__) {
+/*< 	   ITAB(I) = 0 >*/
+	itab[i__] = 0;
+/*< 	END DO >*/
+    }
+/*< 	DO I = 1,53 >*/
+    for (i__ = 0; i__ < 53; ++i__) {
+/*< 	   ITAB(IBLIST(54-I)) = ITAB(IBLIST(54-I))*2 + IBITS(54-I) >*/
+	itab[iblist[54 - i__] - 1] = (itab[iblist[54 - i__] - 1] << 1)
+		 + ibits[55 - i__];
+/*< 	END DO >*/
+    }
+/*   Sign extend RC's */
+/*< 	DO I = 1,ORDER >*/
+    i__1 = *order;
+    for (i__ = 0; i__ < i__1; ++i__) {
+/*< 	  >*/
+	if ((itab[i__ + 3] & bit[i__]) != 0) {
+	    itab[i__ + 3] -= bit[i__] << 1;
+	}
+/*< 	END DO >*/
+    }
+/*   Restore variables */
+/*< 	IPITV = ITAB(1) >*/
+    *ipitv = itab[0];
+/*< 	IRMS = ITAB(2) >*/
+    *irms = itab[1];
+/*< 	DO I = 1,ORDER >*/
+    i__1 = *order;
+    for (i__ = 1; i__ <= i__1; ++i__) {
+/*< 	   IRC(I) = ITAB(ORDER+4-I) >*/
+	irc[i__] = itab[*order + 4 - i__ - 1];
+/*< 	END DO >*/
+    }
+/*< 	RETURN >*/
+    return 0;
+/*< 	END >*/
+} /* chanwr_ */
+
+/* Subroutine */ int chanwr_(integer *order, integer *ipitv, integer *irms, 
+	integer *irc, integer *ibits)
+{
+    return chanwr_0_(0, order, ipitv, irms, irc, ibits);
+    }
+
+/* Subroutine */ int chanrd_(integer *order, integer *ipitv, integer *irms, 
+	integer *irc, integer *ibits)
+{
+    return chanwr_0_(1, order, ipitv, irms, irc, ibits);
+    }
+

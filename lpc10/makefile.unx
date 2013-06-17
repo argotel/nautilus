@@ -1,0 +1,80 @@
+# 
+# Makefile for LPC-10 speech coder library (unix)
+# 
+# SCCS ID: @(#)makefile.unx 1.3 96/05/20
+#
+
+# default C compiler
+CC= gcc
+AR=ar
+LD=ld
+RANLIB=ranlib
+
+
+# 
+# These definitions for CFLAGS and NAUTILUS_HOME are used when one
+# runs make in the lpc10 directory, without environment variables that
+# override them.  When make is run in this directory from the Nautilus
+# Makefile, there are environment variables set for CFLAGS and
+# NAUTILUS_HOME that override these definitions.
+# 
+
+NAUTILUS_HOME = ..
+
+# 
+# -I$(NAUTILUS_HOME) option needed so that #include "machine.h"
+# directives can find the machine.h file.
+# 
+
+#WARNINGS = -Wunused -Wswitch -Wformat -Wchar-subscripts
+WARNINGS =
+CFLAGS = -O -DUNIX -I$(NAUTILUS_HOME) $(WARNINGS) $(DEFS)
+
+#LIB = $(NAUTILUS_HOME)/liblpc10.a
+LIB = liblpc10.a
+
+.PHONY: all clean
+
+all:	$(LIB)
+	$(RANLIB) $(LIB)
+
+$(LIB):		$(LIB)(f2clib.o)	\
+		$(LIB)(analys.o)	\
+		$(LIB)(bsynz.o)		\
+		$(LIB)(chanwr.o)	\
+		$(LIB)(dcbias.o)	\
+		$(LIB)(decode.o)	\
+		$(LIB)(deemp.o)		\
+		$(LIB)(difmag.o)	\
+		$(LIB)(dyptrk.o)	\
+		$(LIB)(encode.o)	\
+		$(LIB)(energy.o)	\
+		$(LIB)(ham84.o)		\
+		$(LIB)(hp100.o)		\
+		$(LIB)(invert.o)	\
+		$(LIB)(irc2pc.o)	\
+		$(LIB)(ivfilt.o)	\
+		$(LIB)(lpcdec.o)	\
+		$(LIB)(lpcenc.o)	\
+		$(LIB)(lpcini.o)	\
+		$(LIB)(lpfilt.o)	\
+		$(LIB)(median.o)	\
+		$(LIB)(mload.o)		\
+		$(LIB)(onset.o)		\
+		$(LIB)(pitsyn.o)	\
+		$(LIB)(placea.o)	\
+		$(LIB)(placev.o)	\
+		$(LIB)(preemp.o)	\
+		$(LIB)(prepro.o)	\
+		$(LIB)(random.o)	\
+		$(LIB)(rcchk.o)		\
+		$(LIB)(synths.o)	\
+		$(LIB)(tbdm.o)		\
+		$(LIB)(voicin.o)	\
+		$(LIB)(vparms.o)
+
+clean:
+	-rm -f *.o
+
+clobber: clean
+	-rm -f $(LIB)

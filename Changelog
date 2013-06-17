@@ -1,0 +1,155 @@
+WISHLIST
+
+o move to openssl
+o integrate speex
+o get nautilus into debian (as nautilus-securephone)
+o how hard is duplex - does it imply multithreading ?
+
+Changes in Nautilus Version 1.8rc5 
+o in DH-only mode do not give up if linux /dev/random is empty. 
+  Warn instead and use /dev/urandom
+o fix 64 bit (hopefully) in x86_64
+o Build on a couple of architectures including arm and powerpc
+  in the open suse build service.
+o tests on raspberry pi.
+
+Changes in Nautilus Version 1.8rc4
+o new spec file as in open suse build service
+o debian subdirectory 
+o require/Recommend also-oss
+o new TIPS for use of cell phones
+
+Changes in Nautilus Version 1.8rc3
+
+o implement local port selection. must do a bind
+  with a valid address record fails for now.
+o Linux distribution independent RPM building
+o Standalone Windows nautilus exe, can be started directly 
+  from read only media without installation
+o tips added how to use Nautilus as a cell/mobile phone encryptor
+ 
+Changes in Nautilus Version 1.8rc2
+
+o complete release building
+o build source releases
+o prominent warning to read DH verification to the other party
+o reworked Changelog
+
+Changes in Nautilus Version 1.8rc1
+
+o nautilus is maintained by Johannes Poehlmann and Stefan
+Wieseckel on berlios. 
+o remove lots of compiler warnings
+o compilation of windows binary with gcc
+o NAT traversal support (rendezvous of 2 nautilus apps both behinds
+	  a firewall, will not work in every NAT, see "doc/TIPS"): 
+	o determine Source port when originating
+	o (in progress) integrate simple nat traversal code by
+	  adding a "listen" mode where you can send UDP "null"
+	  packets to the originating side.
+o new ring and logon tones (US telephone style).
+o commit emails set up
+
+Changes in Nautilus Version 1.7c
+
+o Nautilus is now maintained by the Secure Telephony Working 
+  Group Erlangen (Germany) and Johannes Poehlmann. 
+
+o New project homepage: www.franken.de/crypt/nautilus
+ 
+o Allow to configure Modem init string and Modem Dial prefix. 
+
+o Tweaked the makefiles to compile on Linux
+
+o When compiled for Unix, look for configuration files 
+  /etc/nautilus.cfg and ~/.nautilus.cfg 
+
+o Allow to "go secure" with the modem while in a phone call
+
+
+Changes in Nautilus Version  1.7B
+
+
+o Fixed possible variable initialization bug in win32.c
+
+o Fixed entropy calculation problem under Unix (cli.c, util.c)
+
+o Fixed bug in Unix ReadAudio() function.
+
+o Windows version stress tested for memory leaks (none found)
+
+
+Changes in Nautilus Version   1.7A
+
+
+o Added support for win32 (tested on Win95 and WinNT)
+  This involved the creation of the modules win32.c which
+  depends on win32ai.c and win32ao.c for audio input and
+  output respectively.
+
+o Put the code under Visual C++ 5.0 including creating
+  subprojects for the LPC10 speech coder and RSAREF 2.0.
+
+o Formatted some of the code.  Visual C++ uses tabstops
+  every 4 characters.  Some of the modules have been reformatted
+  to reflect this.
+
+o Changed the default Diffie-Helman key exchange size from
+  768 bits to 1024 bits.
+
+o Changed version string.
+
+o A number of compile time dependencies were added throughout
+  the code for _WIN32.
+
+o Fixed f2clib.c (integer exponentiation didn't handle cases
+  involving negative exponentiation correctly).
+
+o Eliminated most warning messages from code (due to the way
+  optimization is specified for the LPC10 coder, it complains
+  about loss of precision when converting floating point constants
+  (which are doubles) to floats.
+
+o Optimization was customized for LPC10 coder.  Otherwise, the
+  encoder runs fast, but the decoder runs slower than the un-
+  optimized code (!).  This was tested on a Pentium processor.
+
+o ntp_udp.c required changes to work with the winsock DLL.
+  sendto() and recvfrom() are now used to send and receive
+  packets because winsock won't let you call recvfrom() on
+  a connected socket.
+
+
+TODO: (mostly done..)
+
+Hopefully some of this stuff will get done before the 1.7A release
+makes it to the world!
+
+o Test latest source code on Unix (Solaris/Linux) and PC (win95,
+  WinNT) for interoperability and correct functioning.
+
+o Test for interoperability between 1.7A release and 1.6A release.
+
+o Add (primitive) support for serial devices to the Win32 port
+  so it can be used as a secure telephone (should be trivial
+  other than configuring the serial port).
+
+o Format some more (all?) of the source code.
+
+o Simplify the code in comm.c that deals with sending update
+  information when versions differ.  This is unnecessary.  A
+  simple note to the user using the older version that they
+  may wish to visit the web site for information on obtaining
+  a newer release will suffice in addition to determining whether
+  or not the versions will interoperate and either continuing
+  or aborting as appropriate.
+
+o Tune the buffering in win32ai.c and/or win32ao.c to optimize
+  the tradeoff between dropouts and latency.  Perhaps this should
+  be a user-specifiable parameter (either in the config file or
+  on the command line).
+
+o Should we continue to support DOS?  If not, a fair amount of
+  conditionally compiled code (and configuration parameters) can
+  be eliminated which will improve readability of the code
+  somewhat.

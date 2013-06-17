@@ -1,0 +1,16 @@
+This file contains the descriptions of all 1.5d deviations from 1.5c.
+
+		/*** NO CRYPTO CODE HAS CHANGED ***/
+
+doc/
+INSTALL         Added explaination of RSAREF location in makefile.unx
+nautilus.1      Numerous minor changes
+
+src/
+cli.c           Added support for RING_FILE
+nautilus.h      Added support for RING_FILE and verbose parameter to InitAudio()
+pc-audio.c      Added verbose parameter to InitAudio()
+unix.c          Added verbose parameter to InitAudio()
+cli.c
+makefile.unx	Documented 'make clean'
+		Generalized location of RSAREF for makefile.unx (Unix)

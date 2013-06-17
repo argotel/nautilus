@@ -1,0 +1,227 @@
+----------------------------------------------------------------------
+
+Changed a few small things to get it to compile and run on Intel 80x86
+Linux machines.  The Linux version uses the floating point versions of
+the speech coders, but it would be nice to allow the choice between
+compiling with these or the integer versions.
+
+----------------------------------------------------------------------
+
+Added lots of comments to unix.c, and fixed a few minor things like
+making function definitions of argument types and return values match
+the function declaration prototypes in nautilus.h
+
+----------------------------------------------------------------------
+
+Changed "enum config_types" symbols from:
+
+enum config_types { STR, NUM, U16 };
+
+to:
+
+enum config_types { CONFIG_TYPE_STRING, CONFIG_TYPE_NUMBER, CONFIG_TYPE_UINT16 };
+
+because STR was defined in some other Solaris include file.
+
+----------------------------------------------------------------------
+
+Copied the functions PutBits and GetBits to a separate file bitstrm.c,
+and added comments to them.  It is currently defined exactly the same
+way in multiple source files (sp124.c and sun-sp124.c).  I haven't
+done it yet, but I think it would be a good idea to remove their
+identical definitions from sp124.c and sun-sp124.c, and change the
+makefiles so that the file bitstream.c is compiled and linked in.
+
+It might also be nice to use this function even for the other coders
+that only put out one bit per sample, simply for better readability of
+the source code.  It might have a small effect on coder efficiency,
+but it should be minor if so.
+
+----------------------------------------------------------------------
+
+Changed lots of "int" function arguments to "enum xxx", being careful
+to do so only where it made sense.  It won't hurt my feelings at all
+if none of these are incorporated into the official source release.  I
+just thought they might be nice for making the code a little more
+self-documenting.
+
+----------------------------------------------------------------------
+
+Created the files snd-form.doc and lin2ulaw.awk (it is not fun
+restricting oneself to MS-DOS file names!).  These document various
+sound sample formats and how Nautilus converts between them.
+lin2ulaw.awk is a GNU AWK program that can print out conversion tables
+from linear samples to mu-law samples.  I was planning on doing a
+similar one for the other direction, but it hasn't been done yet.  I
+just used AWK instead of C for my own convenience.
+
+----------------------------------------------------------------------
+
+Changed some array/struct initializations in naut_bf.h and sun-sp85.c
+so that they didn't give warnings under some very recent versions of
+GCC.
+
+----------------------------------------------------------------------
+
+Created nautilus.bib, with all of the references that I've received
+from Nautilus authors, including Schneier's Applied Cryptography,
+which was missing from the last patch that I sent.
+
+----------------------------------------------------------------------
+
+Eliminated enum coder_type from nautilus.h, since it was no longer
+used anywhere in the code.
+
+----------------------------------------------------------------------
+
+The sleep() function prototype in nautilus.h differed from those in
+standard Unix include files.  I #ifdef'd the Unix problem away, and
+left the definition there for DOS platforms, but I don't know if there
+might be a better solution.
+
+----------------------------------------------------------------------
+
+I wanted to change the file INSTALL to give instructions for Linux,
+which are very similar to those for SunOS/Solaris, but I still haven't
+tested it yet, so couldn't truthfully say that it had been.  It does
+compile under Linux, though.
+
+----------------------------------------------------------------------
+
+I noticed in some on-line Solaris documentation that the sampling
+rate, number of channels, and sample encoding may all be selected by
+ioctl calls.  If these were used, it would eliminate the need for
+explicit up- and down-sampling.  Do you plan to use them?  Is it only
+SunOS 4.1.x that has the 8000 samples/sec limitation?
+
+----------------------------------------------------------------------
+
+Merged fixed and floating point versions of SP64 and SP85 coders all
+into one file, sp1bit.c.  This file need not be used directly.
+Instead, use the files new-sp64.c and new-sp85.c, which contain
+appropriate #define's already.
+
+I have some questions about the way the coders were written before
+regarding the CLIP preprocessor symbol.  Search for that string in
+sp1bit.c for the questions and proposed fixes.
+
+Note that no Makefiles have been changed yet, and no testing :-( of
+these changed versions has yet been performed.  However, great care
+was taken to keep the behavior exactly as it was before, on all
+platforms.
+
+----------------------------------------------------------------------
+
+Merged fixed and floating point versions of SP124 coders into one
+file, sp2bits.c.
+
+I noticed that in version 0.9.2, the definition of YPMAX was different
+in sp124.c and sun-sp124.c.  I believe that these two values should be
+the same, but I don't know what that value should be.  Authors?
+
+I also noticed that sp1bit.c and sp2bits.c are so similar that they
+might even be mergeable into a single source file sp.c.  I may do this
+just for fun, even though it may get difficult to maintain even with
+the current sp1bit.c file, given the number of #ifdef's that it has.
+Some of those could be reduced if the CLIP stuff were removed, as I
+think it should be.
+
+----------------------------------------------------------------------
+
+Before the Linux version can use the fixed point arithmetic, I need to
+figure out how to get the 80386 assembly language file zmul.asm into a
+form that GCC can handle.  Do any of the authors have experience doing
+this, or know someone that has done it?  I could futz around with it,
+but it might take a while to get it right.
+
+----------------------------------------------------------------------
+
+I've made a start at the necessary changes to the Unix makefile, in
+"Makefile".  The main differences are to define a couple of new
+preprocessor symbols that are needed by sp1bit.c and sp2bits.c on
+various platforms.
+
+----------------------------------------------------------------------
+
+Sat Jul  8 14:30:40 CDT 1995
+
+When I originally merged the SP64 and SP85 coders into one file
+sp1bit.c, I used GetBits() and PutBits() instead of the method using
+variables called 'data' and 'mask' in the original coders.  Bill
+Dorsey was concerned that this would slow them down significantly.  I
+didn't believe this, but I put in a new compile-time switch called
+SLOWER_GETPUTBITS anyway.  When defined, sp1bit.c uses GetBits() and
+PutBits(), and when not defined, the faster method is used.  In my own
+testing on a 486DX2-66 running Linux and the floating point version of
+the coders, I measured that the version compiled without
+SLOWER_GETPUTBITS is about 50% faster than the one with.  I was
+surprised.  OK, Bill, I won't doubt you so readily on any similar
+concern again!
+
+(By the way, I previously sent you a version with a macro symbol
+called FASTER_GETPUTBITS, which was basically !SLOWER_GETPUTBITS.  I
+changed it to default to the faster version if no symbol was defined,
+because then no changes are required to the makefiles if you want the
+faster version.)
+
+----------------------------------------------------------------------
+
+Sat Jul  8 14:30:40 CDT 1995
+
+Moved the code for measuring the speed of execution from the function
+init.c:init() to init.c:CoderSpeedTest(), and added a call to this
+function in cli.c:main() _after_ the command line options are parsed.
+This change was made in main() because I wanted a command line option
+to control whether detailed results from the coder speed testing were
+printed out or not (the verbose option '-v', currently).
+
+I noticed that on my Linux 1.2.9 machine, that the duration of the
+tests, meaning the last value returned from Timer(0) before quitting
+the measuring loop, is often significantly larger than 100 ms.  At
+first I thought this might be because sometimes the coder takes much
+longer than other times, but that didn't make much sense.  Supported
+by the test program timer.c run on both my machine and a Sun
+workstation, I now believe that the problem is with the Linux kernel,
+or the hardware on my machine.  The program timer is very similar to
+the measuring loop in init.c:CoderSpeedTest().  Most of the time, the
+difference between consecutive return values from gettimeofday() is on
+the order of 3-5 ms.  However, in most runs of 100 ms, and more than
+once in runs of 200 ms, I see a larger difference on the order of
+61-63 ms.  I don't know why this is.  If anyone has a clue, please let
+me know.
+
+The effect of this problem is to make the speed testing on Linux less
+consistent from one run to the next, because sometimes the gap occurs
+during the testing of a partciular coder, and sometimes it doesn't.
+The resulting difference in measured coding speed is significant --
+I've seen coding speeds that differed by a factor of 2 or 3 from each
+other, from one run to the next, although a factor of 1.5 is more
+typical.
+
+Sun Jul  9 22:37:11 CDT 1995
+
+I wrote a separate little program called timer.c that does nothing but
+a little loop that is similar to the speed test in init.c, plus
+printing out results each time through the loop.  In my testing, I
+found that when the output goes to the screen, I often see one or a
+few long delays (60-65 ms) mixed in with mostly short delays (2-5 ms).
+However, when I redirect the output to a file, there are no long
+delays.  This leads me to believe that the reason for the long delays
+is that the timing-critical process gets context switched to xterm or
+emacs and back again, because that is where I usually run nautilus
+from.  I also tried running timer and the Nautilus speed test from the
+normal console interface (without X windows), and did not see any long
+delays, except when I piped the output of timer through less.
+
+----------------------------------------------------------------------
+
+Mon Jul 10 00:27:47 CDT 1995
+
+Made a skeleton version of zlib-gcc.c, which will eventually contain a
+working version of the 386 assembler code from zlib.asm that can be
+used within GCC on Linux.  I simply copied zlib.asm and made lots of
+textual changes to it, and adding lots of questions about things that
+I don't yet know about including assembler code in GCC C files, and
+386 assembly in general.
+
+----------------------------------------------------------------------

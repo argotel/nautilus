@@ -1,0 +1,25 @@
+This file contains the descriptions of all 1.6a deviations from 1.5d.
+
+src/
+cli.c		Complain if PlayVoice() cannot access a *.v file.
+makefile.unx	Added support for Unix 'make install' to install to
+		/usr/local/bin and /usr/local/man/man1.
+nautilus_answer	New Unix script to listen for a connection.
+sha.c		A new version of SHA-1 which contains endian-specific
+		code to produce endian-independent hashes.  This fixes
+		the bug causing different DH verification values when
+		connecting Intel (little-endian) and Sun (big-endian)
+		machines.
+versions.c	Fixed bug that would not allow connection to older version.
+
+
+GENERAL CHANGES:
+
+New makefiles allow for compiling with GCC under DOS.
+
+The "unix" #ifdef is now called "UNIX", due to a bug in djgpp 2.0 /
+gcc 2.7.2 preprocessor as compiled for DOS, which automatically #defines
+"unix", even though it is a DOS release.  The downside to this is that
+before we could rely on "unix" to be automatically defined for us by the
+preprocessor, and now we must set "UNIX" ourselves in the makefiles.
+

@@ -1,0 +1,271 @@
+Release 1.8
+Release Candidates
+
+
+
+Release 1.7e
+------------
+o Fixed a couple of compiler warnings (Stefan did it)
+
+Release 1.7d 
+------------
+o also check for config in /etc/nautilis.cfg under UNIX
+
+Release 1.7c
+------------
+o streamline Makefile to use BINDIR and MANDIR
+o -O switch to take over call from telefone
+o default config file to ~/.nautilus.cfg under UNIX
+
+Release 1.7b
+------------
+Status as taken over from original developers.
+
+Release 1.6a
+------------
+
+o Include support for compiling under DJGPP/GCC for DOS.
+
+o Fixed bug that cause different DH verification codes to be displayed when
+  connecting Intel (little-endian) and Sun (big-endian) machines.  1.6a and
+  older Sun-based versions will not display the correct codes, but 1.6a will
+  display identical verficiation codes as Intel-based machines running older
+  versions.
+
+o Included sample 'answer' Unix shell script that will listen for a (network)
+  connection.  This is in leu of a way to kick off an answerer from inetd.
+
+o Fixed bug that did not report that *.v files could not be found.
+
+
+Release 1.5d
+------------
+
+o Added support for a RING_FILE (default: ring.v) to play when a connection
+  request is received.
+
+o Numerous documentation changes (man page, nautilus.cfg, -h, etc.).
+
+
+Release 1.5c
+------------
+
+o Created doc subdirectory.
+
+o Updated nautilus.doc.
+
+o Delivered example nautilus.cfg.
+
+o Made startup sound file (logon.v) location configurable in nautilus.cfg
+  (LOGON_FILE), fixing a bug that would not play it if it wasn't in your
+  current working directory.
+
+o Fixed similar bug with UPDATE_FILE that always created a file called
+  "update", regardless of what was in the configuration file.
+
+
+Release 1.5b
+------------
+
+o Added man page (nautilus.1) for Unix.  You should move this to the proper
+  directory (e.g. /usr/local/man/man1).
+
+o Tightened memory security when entering passphrases.
+
+o Minor improvements in LPC10 coder.
+
+o Added decoding time to -v output and initialization benchmarking.
+  This fixed a bug in LPC85 introduced in 1.0a when bandpass filtering
+  was added, mistakenly allowing LPC85 coding on slow machines.
+
+o Generalized RSAREF directory location in makefile.unx.
+
+
+Release 1.5a
+------------
+
+o Completely replaced the old unreliable, hacked, nasty communications
+  functions with new, high-tech communications layers (NTP and NSP).
+  The new communications layers support both socket-based communications
+  over networks (currently, only UDP is supported), as well as the
+  original serial modem support.
+
+o Added Diffie-Hellman key exchange using the RSAREF package (ugh).
+  Support is present for 512, 768, and 1024-bit key exchanges.
+
+o Added a 2400bps LPC coder.  Given the extra overhead in the
+  communication layers, it actually requires a minimum modem bandwidth
+  of 4800 bps, but this is still an improvement over the 7200 bps
+  minimum bandwidth of the sp64 coder.  Also, this coder sounds quite
+  good.
+
+
+Release 1.0c
+------------
+
+o Added socket support for Unix versions of the code.  The code was
+  contributed by Sameer Parekh and Paul Kronenwetter.  Socket support
+  is automatically included when the "unix" preprocessor symbol is
+  defined.  Currently, the rules in the makefile for SunOS and Solaris
+  will both compile the code correctly, although the Solaris version
+  of the code still doesn't work because of apparent differences in
+  the audio driver.  No attempt has been made to compile or test this
+  code under Linux for the time being, so it probably won't work until
+  someone sits down and ports it.  Needless to say, I would very much
+  appreciate it if you would send me the patches for the code if you
+  go to the trouble to do this.
+
+
+Release 1.0b
+------------
+
+o Fixed a particularly nasty bug in the INT2VALUE() macro used when
+  Nautilus is compiled with FIXED_POINT_ARITHMETIC.  The problem is
+  that the Microsoft C compiler uses 16-bit integers, and the macro
+  assumed it would be handed 32-bit integer arguments.  Although some
+  might argue this is Microsoft's fault for choosing a non-standard
+  integer size in their compiler, it's a lot easier to change the macro
+  than to change their compiler...
+
+
+Release 1.0a
+------------
+
+o [JAF] Added version negotiation extension to startup protocol.
+  Nautilus now knows what versions it's compatible with and has the
+  ability to send a message to an older version informing the user of
+  an incompatibility and letting him know where to pick up a newer
+  version from.
+
+o Added Utimer() function to unix code to provide more accurate timings
+  of speech coders.
+
+o Fixed bug in cli.c where VERSION string was used as the passphrase
+  when a user presses carriage return for the passphrase.  This results
+  in incompatibility between different versions of Nautilus.
+
+o [JAF] Restructured source code and commented liberally.
+
+o [JAF] Added "-v" option to display coder performance relative to host CPU.
+
+o Updated nautilus.doc.
+
+o Enhanced 8500bps coder (sp85) to sound better by adding low
+  pass filtering.
+
+o Added ability to vary microphone sensitivity and output volume
+  level in config file (DOS only).
+
+
+Beta 0.9.2
+----------
+
+o Added a new coder called sp64.  Sounds OK, and works at modem
+  speeds of only 7200 bps.
+
+o Renamed coders from apsd and dmsp to sp85 and sp124.  New naming
+  convention has type of coder and approximate bit rate in hundreds
+  of bits per second.
+
+o Increased number of audio samples used for random number initialization
+  (from 1024 to 2048).
+
+o Added MODEM_RESET configuration parameter which specifies a string
+  to be sent to the modem before Nautilus exits.  The default value
+  is "Z" which sends the string "ATZ" to the modem to cause it to
+  reset.
+
+o Added code in main() to check input from audio device used to
+  initialize random number generator.  If insufficient entropy is
+  present, a warning message is generated.
+
+o Changed InitAudio() in unix.c to properly work around bug in Sun
+  audio driver.  Changed ReadAudio() in unix.c to return error
+  status.  If you noticed a "braaaap" sound when Nautilus started
+  up on your Sun in the past, these fixes will cure this problem.
+
+o Eliminated call to keycrunch() in DES3_Key_Setup().
+
+o Changed keycrunch() to accept a mode parameter.  The output of
+  keycrunch will be completely different depending on whether or not
+  the mode parameter is zero or nonzero.
+
+o Changed the key exchange protocol in XChange().  Now the originator
+  and answerer use a different hash on the passphrase so that they use
+  a different key to encrypt the parameters they exchange.  This
+  prevents the attack originally discovered by Dan Bernstein as well as
+  the variations pointed out by Colin Plumb on sci.crypt.  The fix in
+  release 0.9.1 was insufficient to stop all variations of the playback
+  attack it was designed to detect.
+
+
+Beta 0.9.1
+----------
+
+o Added code to XChange() to detect a replay attack.  Attack works
+  as follows:  Attacker must at the receiving end.  Attacker substitutes
+  received keyexch structure as his own.  This results in a session key,
+  transmit iv, and receive iv which are all zeros.  Thanks go to Dan
+  Bernstein for pointing out this weakness.
+
+o Rewrote WaitFor() function from scratch.  The new function is line
+  oriented, and hopefully this will fix problems some Nautilus users
+  are experiencing with their modems.
+
+o Changed speed element in modem element in params structure from
+  int to unsigned.
+
+o Modified Connect() and AnswerMode() to be a bit more robust in
+  controlling the modem.
+
+o Modified DOS ClosePort() to not mess with modem control registers.
+
+o Fixed include bug in sun4gcc target in makefile.unx.
+
+
+Beta 0.9.0
+----------
+
+o Added private key crypto interface.  Utilizes a session key generated
+  by a cryptographically strong psuedo-random number generator run at
+  both ends and a session key exchange protocol that is resistant to
+  replay attacks.
+
+o Added BLOWFISH cipher.
+
+o Added IDEA cipher.
+
+o Added 3DES cipher.
+
+
+Alpha 0.3.2
+-----------
+
+o Fixed comm.c so that Nautilus issues a "ATD" command to the modem
+  in the absence of a phone number.  "ATO" doesn't pick up the phone
+  line and thus doesn't work.
+
+o Changed sun-dmsp.c and idmsp.c to optimize coder performance.
+  Obtained approximately 0.3 dB boost in SNR and 0.27 dB boost in
+  SNRSEG.
+
+
+Alpha 0.3.1
+-----------
+
+o Changed comm.c to allow user to specify -o (originate) without
+  specifying a phone number.  This causes the Nautilus to issue a "ATO"
+  command to the modem to put it in originate mode.
+
+o Changed beep frequency from 500HZ to 750HZ and duration from 100ms
+  to 80ms.
+
+
+Alpha 0.3.0
+-----------
+
+o Added coder negotiation code to allow Nautilus to automatically
+  select the best coder to use based on the CPU and bandwidth limitations
+  of both ends.  Added code to allow users to override the automatically
+  selected coder if desired.  Modified init.c, nautilus.h, comm.c,
+  cli.c, unix.c, and pc-audio.c

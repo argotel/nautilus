@@ -1,0 +1,142 @@
+.\" Copyright 1996 David Miller <dm0@avana.net>
+.\" For distribution with the Nautilus source or executable
+.Dd 01 Dec 2000
+.Dt NAUTILUS 1
+.Sh NAME
+.Nm nautilus
+.Nd secure dialup/IP voice phone
+.Sh SYNOPSIS
+.Nm nautilus
+{
+.Fl a | A | o | O
+}
+.Op Fl c Ar coder
+.Op Fl e Ar cipher
+.Op Fl i Op Fl n Ar port
+.Op Fl k Ar protocol
+.Op Fl p Ar port
+.Op Fl s Ar speed
+.Op Fl L Ar local originating port
+.Op Fl v
+.Op Fl x
+.Nm nautilus
+.Fl l Ar coders | ciphers
+.Nm nautilus
+.Fl h
+.Sh DESCRIPTION
+.Nm nautilus
+allows half-duplex encrypted-voice conversation over standard phone lines
+or network links.  It requires a PC or Sun Sparcstation with speakers and
+microphone.  Additionally, a 4800 bps or faster modem or IP network
+connection to another computer running
+.Nm nautilus
+is required.
+
+Any combination of available coders and ciphers are possible.  The coder
+stores the audio data in digital form and the cipher encrypts it so as to be 
+easily deciphered only by the intended recipient.  The
+.Op Fl c Ar coder
+/
+.Op Fl e Ar cipher
+combination may be limited by the available CPU speed or transmission
+bandwidth.  (See 
+.Op Fl v
+for details.)
+
+.Sh OPTIONS
+.Fl a
+Auto-answer mode (answer upon connection)
+
+.Fl A
+Manual answer mode (answer immediately)
+
+.Fl c Ar coder
+   Coder selection {SP64, SP85, SP124, LPC10}
+   (default is connection-dependant)
+
+.Fl e Ar cipher
+   Encryption cipher {NONE, BLOWFISH, IDEA, 3DES}
+   (default is BLOWFISH)
+
+.Fl h
+Display help for
+.Nm nautilus
+
+.Fl i Op Fl n Ar port
+   Use IP port rather than direct modem connection
+
+.Fl k Ar protocol
+   Key exchange protocol (passphrase or Diffie-Hellman)
+   {PP, DH, DH512, DH768, DH1024} (default is DH768)
+
+.Fl l Ar coders | Ar ciphers
+   List available coders or ciphers
+
+.Fl o
+Originate a
+.Nm nautilus
+session
+
+.Fl O
+Originate a
+.Nm nautilus
+session without dialing i.e. while talking on the Phone
+
+.Fl p Ar port
+   Serial port for direct modem connection
+
+.Fl s Ar speed
+   Serial port (DTE) speed for direct modem connection
+
+.Fl L Ar local originating port
+   local (source) port when originating a call. Needed for 
+   NAT traversal
+
+.Fl v
+Display verbose coder speed data
+
+.Fl x
+Suppress startup and ring sounds
+
+.Sh INTERNATIONAL USE
+Export of
+.Nm nautilus
+encryption code from the United States is presumably regulated by the
+U.S. Department of Commerce via the Commerce Control List.  Export 
+this software from the USA (or import to the USA) at your own risk.
+
+
+.Sh CONFIGURATION FILE
+Typically named 
+.Nm nautilus.cfg ,
+alternatively specified by the environment variable
+.Nm NAUTILUS_CONFIG_FILE .
+With the 
+.Nm UNIX
+version these are 
+.Nm /etc/nautilus.cfg 
+(system wide) and 
+.Nm ~/nautilus.cfg.
+(per user)
+
+.Sh SEE ALSO
+.Nm ANNOUNCE ,
+.Nm CHANGES ,
+.Nm nautilus.doc ,
+.Nm rsalicen.txt ,
+.Nm http://www.lila.com/nautilus/ ,
+( original developers home page)
+.Nm http://www.franken.de/crypt/nautilus/ 
+(new home page).
+
+.Sh AUTHORS
+Originally developed by William Dorsey <dorsey@lila.com>, Pat Mullarky,
+and Paul Rubin.  Additional development and support from the rest
+of the Nautilus development team <nautilus@lila.com>.  Post-1.5a development
+by David Miller <dm0@avana.net>. Maintained now by the secure Telephony
+group Erlangen <secfone@immd1.informatik.uni-erlangen.de> 
+and Johannes Poehlmann
+
+.Sh PLATFORMS
+Ported to MS-DOS, Sun OS, Solaris, and Linux.
+.\" .TH NAUTILUS 1 "01 Dec 2000" "Nautilus 1.7c" "Nautilus Manual"

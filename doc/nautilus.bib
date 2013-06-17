@@ -1,0 +1,179 @@
+@string{IEEETASSP = "IEEE Transactions on Acoustics, Speech, and
+		 Signal Processing"}
+@string{IEEETComm = "IEEE Transactions on Communications"}
+
+
+@Book{Owen1993,
+  author = 	"F. J. Owens",
+  title = 	"Signal Processing of Speech",
+  publisher = 	"McGraw-Hill",
+  year = 	"1993",
+  OPTeditor = 	"",
+  OPTvolume = 	"",
+  OPTseries = 	"",
+  OPTaddress = 	"",
+  OPTedition = 	"",
+  OPTmonth = 	"",
+  locs = 	"Not at WashU as of 13 June 1995",
+  note = 	"Recommended by Nautilus co-author Paul Rubin as a
+		 good introductory book on the subject of speech
+		 compression/coding."
+}
+
+
+@Book{JayaNoll1984,
+  author = 	"Nuggehally S. Jayant and Peter Noll",
+  title = 	"Digital Coding of Waveforms: principles and
+		 applications to speech and video",
+  publisher = 	"Prentice-Hall",
+  year = 	"1984",
+  OPTeditor = 	"",
+  OPTvolume = 	"",
+  series = 	"Prentice-Hall signal processing series",
+  OPTaddress = 	"",
+  OPTedition = 	"",
+  OPTmonth = 	"",
+  callnum = 	"TK5102.5 J39 1984",
+  isbn = 	"0-13-211913-7",
+  locs = 	"WashU",
+  note = 	"Nautilus co-author Bill Dorsey recommends this book
+		 as a good book on the speech coders used in Nautilus
+		 version 0.9.x, and speech coding in general.  Page
+		 301 briefly discusses a ``second-order, four-state
+		 switched predictor for speech'', which is what
+		 Nautilus is based on.  See also the two papers by
+		 Evci, Steele, and Xydeas for more details on this
+		 coder."
+}
+
+
+@Book{RabiScha1978,
+  author = 	"Lawrence R. Rabiner and Ronald W. Schafer",
+  title = 	"Digital Processing of Speech Signals",
+  publisher = 	"Prentice-Hall",
+  year = 	"1978",
+  editor = 	"Alan V. Oppenheim",
+  OPTvolume = 	"",
+  series = 	"Prentice-Hall Signal Processing Series",
+  OPTaddress = 	"",
+  OPTedition = 	"",
+  OPTmonth = 	"",
+  callnum = 	"TK7882.S65R3",
+  isbn = 	"0-13-213603-1",
+  note = 	"A classic work in digital speech processing.  For
+		 Nautilus, the most useful parts are probably Chapter
+		 5 on digital representations of the speech waveform,
+		 and Chapter 8 on linear predictive coding (LPC) of
+		 speech.",
+  locs = 	"WashU"
+}
+
+
+@InProceedings{EvciXydeStee1981,
+  author = 	"Cumhur C. Evci and Costas X. Xydeas and Raymond
+		 Steele",
+  title = 	"Sequential adaptive predictors for {ADPCM} speech
+		 encoders",
+  booktitle = 	"Proceedings of the National Telecommunications
+		 Conference",
+  year = 	"1981",
+  OPTeditor = 	"",
+  pages = 	"E8.1.1-E8.1.5",
+  OPTorganization = 	"",
+  OPTpublisher = 	"",
+  OPTaddress = 	"",
+  month = 	nov,
+  note = 	"This paper is cited in Chapter 6 of Jayant and Noll's
+		 book as the source for the actual second-order
+		 predictor coefficients given in Table 6.3.",
+  locs = 	"WashU me"
+}
+
+
+
+@Article{EvciSteeXyde1981,
+  author = 	"Cumhur C. Evci and Raymond Steele and Costas X.
+		 Xydeas",
+  title = 	"{DPCM-AQF} Using Second-Order Adaptive Predictors for
+		 Speech Signals",
+  journal = 	IEEETASSP,
+  year = 	"1981",
+  volume = 	"ASSP-29",
+  number = 	"3",
+  pages = 	"337-341",
+  month = 	jun,
+  note = 	"This article was recommended by Nautilus co-author
+		 Bill Dorsey as a reference for more details on the
+		 second-order, four-state switched predictor for
+		 speech on which Nuatilus's speech coder is based.
+		 However, it does not appear to contain the actual
+		 second-order predictor coefficients used in Nautilus.
+		 These coefficients are in Jayant and Noll's book, and
+		 they cite the other paper by Evci, Xydeas, and Steele
+		 in 1981 as the source.  They also have this paper in
+		 their bibliography for Chapter 6, but I do not see it
+		 cited anywhere in the text of Chapter 6.",
+  locs = 	"WashU me"
+}
+
+
+@Article{LindBuzoGray1980,
+  author = 	"Yoseph Linde and Andr\'{e}s Buzo and Robert M. Gray",
+  title = 	"An Algorithm for Vector Quantizer Design",
+  journal = 	IEEETComm,
+  year = 	"1980",
+  volume = 	"COM-28",
+  number = 	"1",
+  pages = 	"84-95",
+  month = 	jan,
+  note = 	"This article was mentioned by Nautilus co-author Bill
+		 Dorsey as a reference on the LBG algorithm for
+		 determining coefficients for a second-order predictor
+		 for speech signals, which is apparently how the
+		 coefficients used by Nautilus were determined.",
+  locs = 	"WashU me"
+}
+
+
+@Manual{Savo1994,
+  title = 	"Hacker's Guide to VoxWare 2.4 (second draft)",
+  author = 	"Hannu Savolainen",
+  address = 	"hannu@voxware.pp.fi or perhaps also
+		 Hannu.Savolainen@helsinki.fi",
+  year = 	"1994",
+  month = 	feb,
+  note = 	"Hannu is the author of VoxWare, the sound driver used
+		 in Linux, and perhaps also several other free
+		 versions of Unix that run on Intel PC's.  This
+		 document is available by anonymous FTP to
+		 nic.funet.fi in the directory
+		 /pub/OS/Linux/ALPHA/sound, file name
+		 snd-sdk-doc-0.1.ps.gz.  Note that the ALPHA and sound
+		 directories are ``hidden'' as of 15 June 1995, but
+		 you can still change to those directories and do a
+		 "dir" command (not "ls") to see the files in the
+		 sound directory."
+}
+
+
+@Book{Schn1994,
+  author = 	"Bruce Schneier",
+  title = 	"Applied Cryptography: Protocols, Algorithms, and
+		 Source Code in C",
+  publisher = 	"John Wiley & Sons, Inc.",
+  year = 	"1996",
+  OPTeditor = 	"",
+  OPTvolume = 	"",
+  OPTseries = 	"",
+  OPTaddress = 	"",
+  OPTedition = 	"Second Edition",
+  OPTmonth = 	"",
+  isbn = 	"0-471-59756-2",
+  note = 	"This is a very nice book on cryptography that covers
+		 lots of ground.  The C source code is useful, and the
+		 author covers lots of cryptographic protocols and
+		 attacks against them.  The bibliography is huge!
+		 An errata is available for both editions at
+		 http://www.counterpane.com"
+}
+

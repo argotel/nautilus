@@ -1,0 +1,61 @@
+
+This file contains the descriptions of all 1.5a deviations from 1.5d.
+
+		/*** NO CRYPTO CODE HAS CHANGED ***/
+
+doc/		
+INSTALL         Added explaination of RSAREF location in makefile.unx.
+nautilus.1      New man page.
+nautilus.doc	Updated with 28.8/Digital Telephony Act/DSS/Schneier stuff.
+TODO		Merged stuff from Bill and Dave's excellent wishlists.
+
+src/
+cli.c           Added support for RING_FILE.
+		Complain if PlayVoice() cannot access a *.v file.
+		Fixed problem displaying 38400 DTE on DOS (16-bit) machines
+                  and tightened memory security when entering passphrases.
+init.c		Added decoding to CoderSpeedTest() (fixing SP85 bug introduced
+		  in 1.0a) and added support for LOGON_FILE parameter.
+logon.v		Conservatively cut out a little noise from the start and end
+		  (saving 6k).
+makefile.unx	Added support for Unix 'make install' to install to
+		  /usr/local/bin and /usr/local/man/man1.
+		Documented 'make clean'.
+		Generalized location of RSAREF.
+nautilus.h      Added verbose parameter to InitAudio().
+		Added RING_FILE and LOGON_FILE and fix to really use
+		  UPGRADE_FILE in .cfg.
+nautilus.cfg	Example configuration script.
+nautilus_answer	New Unix script to listen for a connection.
+pc-audio.c      Added verbose parameter to InitAudio()
+sha.c		A new version of SHA (SHA-1) which contains endian-specific
+		  code to produce endian-independent hashes.  This fixes
+		  the bug causing different DH verification values between
+		  Intel (little-endian) and Sun (big-endian) machines.
+sp1bit.c	Pitiful initialization optimization.
+unix.c          Added verbose parameter to InitAudio()
+		Changed Expected/Desired audio params verbosity to a table to
+		  save vertical screen space.  Removed unused variables.
+versions.c	Fixed bug that would not allow connection to older version.
+		Fixed bug that ignored UPGRADE_FILE in the .cfg
+
+lpc10/
+lpc10/analys.c	1-line header documentation fix from Bill.
+lpc10/bsynz.c	Simplified indexing and looping.
+lpc10/decode.c	1-line header documentation fix from Bill.
+lpc10/difmag.c	Elimination of variables and a decision-reduction.
+lpc10/dyptrk.c	Initialization and indexing calculation reduction.
+lpc10/energy.c	Lame f2c optimization with variable 'speech' (now index 0).
+lpc10/mload.c	Removed simple middle-man variable.
+lpc10/lpfile.c	Just made it look like C (one big addition).
+lpc10/onset.c	Removed middle-man variable, peoffset, and simplified indexing.
+lpc10/synths.c	Fixed ported FORTRAN initialization.
+lpc10/vparms.c	Simplified indexing and changed unnecessary doublereal
+		  conversions to real.
+
+GENERAL CHANGES:
+
+New directory structure including doc/ and src/
+
+New makefiles allow for compiling with GCC under DOS.
+

@@ -1,0 +1,243 @@
+Thu Jun 22 00:28:21 CDT 1995    Andy Fingerhut (jaf@arl.wustl.edu)
+
+
+There are several sound formats used within the Nautilus program, and
+some are only used on certain operating systems.  Here are
+descriptions of all that I know about.
+
+Here are all of the forms in which a single sound sample may be stored
+within Nautilus.
+
+Following that is a list, for each Nautilus platform, of the
+conversion steps performed in that version of Nautilus.
+
+
+----------------------------------------------------------------------
+
+Long name:  8 bit linear samples represented in 2's complement signed
+            form
+Short name: 8 bit signed linear
+
+A silent sample is represented as a 0, with samples vales ranging from
+-128 to +127, inclusive.  If you are not familiar with 2's complement
+signed representation and want to learn more, see just about any
+computer logic design text book, or a book on assembly language
+programming.
+
+----------------------------------------------------------------------
+
+Long name:  8 bit linear samples represented in unsigned (or "excess
+            128") form
+Short name: 8 bit unsigned linear
+
+To be more precise, a silent sound with samples in this format would
+be represented as a sequence of samples equal to 128.  The minimum
+sample is represented by 0, and the maximum as 255.  This is the kind
+of sound sample that comes from the VoxWare, the Linux sound driver,
+and presumably it is also what comes directly from many sound cards
+used in ix86 boxes.
+
+Another way to think of this is that it is a signed value in the range
+-128 to +127, but it is represented in "excess 128" form.  That is,
+all values are stored as 128 more than the desired value.  Hence, it
+should not be difficult to see that converting from this format to 8
+bit signed simply requires subtracting 128.
+
+----------------------------------------------------------------------
+
+Long name:  8 bit mu-law samples represented in 2's complement signed
+            form
+Short name: 8 bit signed mu-law
+
+This representation isn't actually used anywhere inside of Nautilus,
+or anywhere else that I've seen.  I introduce it here simply to make
+it easier to understand Sun's weird mu-law sample encoding.
+Understand this one first, and then Sun's is just a strange tweak on
+this.
+
+The formula for converting a linear sample x in the range
+[-1,+1] to a mu-law sample y in the same range is:
+
+y = log ( 1 + mu * |x| ) / log ( 1 + mu ) * sign(x)
+
+where mu >= 1 is a parameter chosen in advance and used for all
+samples, and sign(x) is -1 if x < 0 and +1 otherwise.  Note that the
+logarithm can be to any base and the value of the formula is the same.
+
+If x is in the range [-x_max,+x_max], and the resulting y should also
+be in that range, then we can simply divide |x| by x_max, and multiply
+the resulting formula by x_max, to scale things appropriately.
+
+y = x_max * log ( 1 + mu * |x|/x_max ) / log ( 1 + mu ) * sign(x)
+
+These formulas, formulas for A-law encoding (used in the European
+digital telephone systems), and a wealth of details on the properties
+of these encoding methods can be found, among other places, in
+[Rabiner & Schafer, 1978], p. 188, and also [Jayant & Noll, 1984],
+p. 230.  I will note here is that with the mu-law or A-law kind of
+logarithmic sample encoding, the digitization noise introduced is a
+constant fraction of the signal magnitude (over a wide range of sample
+values), instead of being independent of the signal magnitude, as for
+linear encoding of samples.
+
+According to [Jayant & Noll, 1984], p. 229, mu=255 is a standard value
+for mu.  It also appears to be the value used in SunOS's
+linear<->mu-law conversion tables.
+
+Given an 8 bit signed sample, it could be converted to an 8 bit signed
+mu-law sample by using x_max=128, and truncating or rounding off the
+resulting y value to the nearest integer.
+
+----------------------------------------------------------------------
+
+Long name:  8 bit mu-law samples represented in Sun's format
+Short name: 8 bit Sun mu-law
+
+I can't figure out why someone at Sun chose to represent mu-law
+samples this way.  If anyone knows, please tell me.
+
+Sun's mu-law could almost be thought of as 8 bit mu-law with samples
+represented in unsigned, or "excess 128", form.  This is true for the
+smallest sample, 0, up to the value one less than the "zero sample".
+However, for the zero sample value and up, the order of the bit
+patterns is reversed.  To illustrate, here is a table showing what the
+order of the samples would be if they were in excess 128 form, and
+what Sun mu-law actually does.
+
+                        excess 128      Sun's .au
+                        numbers         order
+                
+smallest sample         00000000        00000000  \  
+                        00000001        00000001   \ 
+                        00000010        00000010    |
+                                                    |  These are the
+                          ...             ...       |  same for both.
+                                                    |
+                        01111110        01111110   / 
+                        01111111        01111111  /  
+                
+zero sample             10000000        11111111  \  
+                        10000001        11111110   \ 
+                        10000010        11111101    |
+                                                    |  The Sun order
+                          ...             ...       |  is reversed.
+                                                    |
+                        11111110        10000001   / 
+largest sample          11111111        10000000  /  
+
+An AWK program that can make conversion tables between linear and
+mu-law samples is provided in the file "ulaw2lin.awk".  See the
+comments there for how to use it.
+
+----------------------------------------------------------------------
+
+Long name:  16 bit linear samples represented in 2's complement signed
+            form
+Short name: 16 bit signed linear
+
+This is the same thing as 8 bit signed linear, except each sample has
+16 bits.
+
+----------------------------------------------------------------------
+
+Long name:  floating point linear samples in the range [-1.0, +1.0]
+Short name: floating point linear
+
+This is used in the floating point version of the speech coders.  One
+can convert between 16 bit signed linear and floating point linear
+with the macros audio_s2f (Standard to Floating point) and audio_f2s
+(Floating point to Standard), defined in the source files for the
+floating point coders.
+
+----------------------------------------------------------------------
+
+
+For every platform, the first step in recording speech before encoding
+it is to get it from the appropriate audio device and convert it to
+"standard" form, which is 16 bit signed linear in Nautilus.
+
+This is the form in which the audio samples are passed to one of the
+speech coder functions.  Some additional conversion may go on inside
+of these functions before actual coding takes place, depending on
+whether the coder function uses floating point or integer arithmetic,
+and depending on whether the samples given to it were sampled at the
+desired rate.
+
+Sun's go through this process to get samples converted between its
+"raw" form, expected by the /dev/audio device, and "standard" form.
+
+
+                 /dev/audio
+                    |   ^
+                    |   |
+   read system call |   | write system call
+                    |   |
+                    v   |
+        8000 samples/sec 8 bit Sun U-law
+                    |   ^
+                    |   |
+Raw2Std, which uses |   |  Std2Raw, which uses
+the SunOS/Solaris   |   |  the SunOS/Solaris
+macro audio_u2s     |   |  macro audio_s2u
+                    |   |
+                    v   |
+       8000 samples/sec 16 bit signed linear
+
+
+MS-DOS machines use the following paths.  The "X" samples/sec is set
+to be as close as possible to the sampling rate required by the speech
+coder chosen.  See function init() in init.c for these desired values.
+
+
+             compatible sound card
+                    |   ^
+                    |   |
+All of the mess     |   | All of the mess
+in pc-audio.c func. |   | in pc-audio.c function
+ReadAudio           |   | WriteAudio
+                    |   |
+                    v   |
+          X samples/sec 8 bit unsigned linear
+                    |   ^
+                    |   |
+Raw2Std, which      |   |  Std2Raw, which
+simply subtracts 128|   |  shifts right and
+and shifts left     |   |  adds 128
+                    |   |
+                    v   |
+          X samples/sec 16 bit signed linear
+
+
+Linux machines use the following paths.  X has the same meaning as
+for MS-DOS machines.
+
+             compatible sound card
+                    |   ^
+                    |   |
+All of the mess     |   |  All of the mess
+in the VoxWare      |   |  in the VoxWare     <-- At least this mess is
+sound driver        |   |  sound driver           hidden from the non-kernel
+read system call    |   |  write system call      hacker, though.
+                    |   |
+                    v   |
+          X samples/sec 8 bit unsigned linear
+                    |   ^
+                    |   |
+Raw2Std, which      |   |  Std2Raw, which
+simply subtracts 128|   |  shifts right and
+and shifts left     |   |  adds 128
+                    |   |
+                    v   |
+          X samples/sec 16 bit signed linear
+
+
+
+When going through the floating point coders, there an additional
+conversion to floating point linear samples before compressing the
+signal.  This is done with the macros audio_s2f and audio_f2s in the
+floating point coder functions.
+
+On Sun workstations, the /dev/audio device records at 8000
+samples/sec, but the SP64 and SP124 coders expect input sampled at
+6000 samples/sec.  Functions upsample and downsample are used to
+convert between these sampling rates on Sun machines.

@@ -1,0 +1,30 @@
+Installation Instructions for Nautilus on Unix Systems
+------------------------------------------------------
+
+    Nautilus currently runs on Sun workstations with audio hardware
+    running SunOS 4.1.X and Solaris 2.X.  It also runs on IBM
+    PC-compatibles running Linux.  To build Nautilus, you will need an
+    ANSI C compiler like gcc.
+
+    To build Nautilus under SunOS/Solaris/Linux, perform the following
+    steps:
+
+    1)  Unpack the source distribution into a build directory.
+    2)  Link (or copy) makefile.unx to Makefile.
+    3)  Edit the makefile if necessary. 
+    4)  Type 'make'.  You will be presented with a list of platforms
+	for which the makefile knows how to build Nautilus.  If you are
+	building on a different platform, you will need to edit the
+	Makefile to include support for your platform first (additional
+	changes may also be necessary to the source code).
+    5)  Type 'make <platform>' where platform is one of the options
+        listed when you typed make in step 3 above.  If all goes
+        well, a nautilus executable (and optionally a 'nuke' and
+        'unnuke' executable) will be produced.
+    6) Type 'make install' to copy nautilus to /usr/local/bin and
+        doc/nautilus.1 /usr/local/man/man1. 
+        Say "make install BINDIR=/foo MANDIR=/bar" if you want them
+	copied to  /foo/ and /bar/man1 instead.
+    7) This simplified build process is not tested on Sun OS and Solaris.
+	Perhaps	someone is willing to test on the BSDs ?
+

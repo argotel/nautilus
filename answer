@@ -1,0 +1,20 @@
+#
+# This is a simple Unix script that will setup Nautilus to
+# listen for a forthcoming internet connection.
+#
+# Sometimes coder/cipher combinations make connections a pain.
+# This script makes life a little easier.
+#
+# As is the Unix standard, Nautilus exit()'s with a 0 (zero)
+# after a successful session.  Errors return non-zero.
+# "$?" is the success of the last command executed.
+#
+# Modify this script as appropriate.  It is only intended
+# as an example.
+#
+# 06/15/97 - David Miller
+
+while [ "$?" != 0 ]
+do
+	nautilus -vai
+done

@@ -1,0 +1,15 @@
+--------------------Configuration: lpc10 - Win32 Release--------------------
+Begining build with project "C:\dorsey\nautilus\lpc10\lpc10.dsp", with item "dyptrk.c"
+Active configuration is Win32 (x86) Static Library (based on Win32 (x86) Static Library)
+
+
+Creating temp file "C:\TEMP\RSPF2.tmp" with contents </nologo /ML /W3 /GX /Ox /Ot /Oa /Ow /Og /Oi /Op /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /Fp"Release/lpc10.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\dorsey\nautilus\lpc10\dyptrk.c"
+>
+Creating command line "cl.exe @C:\TEMP\RSPF2.tmp" 
+Compiling...
+dyptrk.c
+
+
+
+dyptrk.obj - 0 error(s), 0 warning(s)

@@ -1,0 +1,38 @@
+Installation Instructions for Nautilus on WINDOWS 
+-------------------------------------------------
+
+To compile Nautilus, you'll need the RSAREF 2.0 library, available for
+free for non-commercial use in the US and Canada from RSA Laboratories
+(anonymous ftp to rsa.com for details). Rasref is already packaged in
+this source release.
+
+(These instructions seem to be outdated J.P.)
+
+    These instructions assume you have Microsoft C version 7.0 or
+    later.  The makefile for Nautilus currently only works with
+    Microsoft C, so if you have some other compiler, you're on
+    your own.  If you do manage to get Nautilus to build with
+    some other compiler, please send me the makefile that you
+    used and I'll include it in future releases.
+
+    1)  Unpack the source distribution into a build directory.
+    2)  Unpack the RSAREF 2.0 library and install it in a directory
+        named 'rsaref' in the main build directory.
+    3)  Change to the rsaref\install\dos subdirectory.
+    4)  Copy the makefile in this directory to the parent directory.
+    5)  Change to the rsaref\install subdirectory.
+    6)  Use the Microsoft C 'nmake' program to build rsaref.lib
+    7)  Copy the rsaref.lib library to the main build directory.
+    8)  Change to the lpc10 subdirectory.
+    9)  Copy makefile.dos to makefile.
+    10) Use the Microsoft C 'nmake' program to build lpc10.lib.
+    11) Change to the main build directory.
+    12) Copy makefile.dos to makefile.
+    13) Use the Microsoft C 'nmake' program to build nautilus.exe.
+
+    Alternatively, you can construct a project file for Nautilus
+    and build it from within the project manager.  Just use the
+    existing makefile to guide you in the process of setting this
+    up.
+
+

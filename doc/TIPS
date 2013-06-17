@@ -1,0 +1,128 @@
+Modems do not connect:
+=====================
+
+   if the modems do not connect but stay whistling and making ugly
+   noise, try to add this command to the modem init string.
+ 
+   at+ms=11,1,14400,38400 
+
+   It makes the modem not to try "V fast Connects" but only "V34".
+   This is also valid with 56K modems, as 56k is not possible 
+   between two modems, but only with a special peer device. 56k
+   modems fall back to V34.
+
+
+Nautilus and NAT
+===============
+
+With the upcoming of router boxes (cable modems, DSL boxes) most users
+sit behind a NAT firewall and their computers use private IP adresses,
+which makes then unreachable from the internet. NAT is the standard 
+setup in Universities and Companies also. Even some internet providers 
+impose NAT on their customers, e.g. cellphone operators. 
+
+As a "peer to peer" application, nautilus - like every "peer to peer"
+application depends on the possibility to contact one party from the internet.
+
+One side behind a NAT firewall
+==============================
+
+The call must be originated by the party behind the NAT firewall
+
+Both sides are behind a NAT firewall
+====================================
+
+If both parties sit behind a NAT gateway nautilus is unusable,
+without measures. The  NAT gateway must be instructed to setup
+a "port forwarding" to the machine where nautilus is running.
+
+If one party is are able to set up a port a forwarding, there is no problem.
+To make a connection without explicitly opening a port (which you
+often are not able to) use nat-traverse (http://linide.sourceforge.net/nat-traverse/)
+
+This should work if the source port number of outgoing packets is not changed
+as long there is no conflict (another machine using the same source port
+number). This is the case with  "full cone" "restricted cone" and "port
+restricted cone" NAT, but not with symmetric NAT. 
+
+To determine the type of NAT and the external address of your 
+firewall use stunc ( from http://sofia-sip.sf.net/ or from
+your Linux distributor).
+
+The following example is taken from the documentation of nat-traverse and 
+adapted to nautilus.  
+
+  root@left  # PORT=60001; until \
+                 nat-traverse --quit-after-connect $PORT:right:PORT \
+               do \
+                 sleep 5 \
+               done; \
+               nautilus -o -i -L $PORT -p $PORT right
+  root@right # until \
+                 nat-traverse --quit-after-connect $PORT:left:$PORT \
+               do \
+                 sleep 5 \
+               done; \
+               nautilus -l -i -p $PORT
+
+To traverse a friendly NAT, it may even be enough if both sides try to start
+nautilus every (say) 2 seconds in originating mode and one side then switches
+to answering mode. A special originating mode may be useful for this that would
+send UDP packets and switch to answer mode on the reception of a packet from
+the selected target. So the nat-traverse step would be integrated in nautilus.
+
+Possibly nat-traversal should be selectable for both modes so that normal
+operation starts on reception of a NAT traversal ACK package. 
+
+
+Using nautilus as a cell phone / mobile phone encryptor
+========================================================
+
+Many GSM cell phones can be used as a modem. They can be connected
+to the PC via a serial or USB data cable or via Bluetoth. nautilus
+can be used in "modem mode" between 2 cell phones. As you pay for 
+a GSM data call (CSD mode), the telephone company can not complain.
+
+Your PC is NOT connected to the internet. Modem mode is not (yet)
+possible in nautilus for Windows, you will have to use real GSM 
+dial up networking, i.e. Internet via your Cellphone.
+
+To integrate your GSM phone as a modem into Linux, you have to type
+as root:
+
+Get Address of GSM phone: (looks like 00:11:22:33:44:55 )
+        hcitool scan
+get "RFCOMM channel"
+	sdptool search DUN
+connect mobile phone with address 00:11:22:33:44:55 and RFCOMM channel 3 to /dev/rfcomm0:
+
+		  rfcomm bind 0 00:12:62:03:71:D7 3
+
+now Linux can access your mobile phone as a modem under /dev/rfcomm0
+
+It is said to be possible to connect a modem via analog POTS to 
+a mobile phone in CSD mode. To make this work special modem
+init strings are needed. See the very instructive document:
+http://www.baty.hanse.de/gsmlink/gsmlink.txt.
+to make a connection to a POTS modem, you have to select
+V34  (modem) 9600 bps: AT+CBST=7,0,1. 
+When connecting to a ISDN PABX with modem emulation you have to use
+V110 (IDSN) 9600 bps:  AT+CBST=71,0,1
+
+Other German Reference pages are
+http://www.trinler.org/de/service/technik/gsm.html
+http://www.nobbi.com/atgsm.html
+or Search for the ETSI SPEC ts_127007v050200p.pdf
+
+We will test (TODO!) nokia 6520 and a nokia XXXX with nautilus for Linux
+
+
+OSS is missing (e.g. Nokia N900, modern linux systems in general)
+=================================================================
+
+Install the wrapper library alsa-oss.
+Now you can start nautilus as "aoss nautilus -x -y -z .."
+and nautilus is using alsa via the wrapper library.
+Tested on opensuse 12.1
+
+

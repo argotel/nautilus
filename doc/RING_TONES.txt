@@ -1,0 +1,23 @@
+Original US dial tones:
+
+See: http://en.wikipedia.org/wiki/Precise_Tone_Plan
+
+
+  sox -u -b -c1 -r8000 -n -t raw - synth 5 sine 440 synth 5 sine mix 350 vol 0.5 >dialtone.raw
+	mv dialtone.raw logon_new.v
+  sox -u -b -c1 -r8000 -n -t raw - synth 1 sine 440 synth 1 sine mix 380 vol 0.4 > ringback.raw
+  sox -u -b -c1 -r8000 -n -t raw - synth 2 sine 440 synth 2 sine mix 380 vol 0.0 >> ringback.raw
+  sox -u -b -c1 -r8000 -n -t raw - synth 1 sine 440 synth 1 sine mix 380 vol 0.4 >> ringback.raw
+  sox -u -b -c1 -r8000 -n -t raw - synth 2 sine 440 synth 2 sine mix 380 vol 0.0 >> ringback.raw
+  sox -u -b -c1 -r8000 -n -t raw - synth 1 sine 440 synth 1 sine mix 380 vol 0.4 >> ringback.raw
+  mv ringback.raw ring_new.v
+
+
+Funny ring modulated sounds:
+  sox -1 -u -r 8000 -c 1 -n ring2.raw synth 0.4 sine 440 synth 0.4 sine amod 44 vol 0.4 -
+  sox -1 -u -r 8000 -c 1 -n ring3.raw synth 0.7 sine 440 synth 0.7 sine amod 44 vol 0.0 -
+  sox -1 -u -r 8000 -c 1 -n ring4.raw synth 0.7 sine 440 synth 0.7 sine amod 44 vol 0.4 -
+  cat ring2.raw ring3.raw ring4.raw >logon.v
+
+  sox -1 -u -r 8000 -c 1 -n ring.raw synth 0.4 sine 880 synth 0.4 sine amod 88 vol 0.4 -
+  cat ring.raw ring3.raw ring.raw >ringx.raw

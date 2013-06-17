@@ -1,0 +1,34 @@
+This package was debianized by Johannes Poehlmann <johannes.poehlmann@lst.de> on
+Sat, 08 Aug 2009 15:33:52 +0000.
+
+It was downloaded from <http://nautilus.berlios.de>
+
+Upstream Author(s):
+
+    William Dorsey, Andrew Fingerhut, et al. (created the program)
+    Nautilus maintainers (added some patches)
+
+Copyright:
+
+    Copyright (c) 1993, 1994, 1995 by William Dorsey. et al
+
+License:
+
+    Mixed licences, free for not profit use. 
+
+The Debian packaging is:
+
+    Copyright (C) 2009 Johannes Poehlmann <johannes.poehlmann@lst.de>
+
+and is licensed under the GPL version 3, 
+see `/usr/share/common-licenses/GPL-3'.
+
+SHA code:
+	* Copyright 1993, Dr. James J. Gillogly
+	* This code may be freely used in any application.
+RSAREF
+	* Copyright (C) 1990-1993, RSA Data Security, Inc. 
+	* Proprietary licence allowing non profit use "non violating the interface"
+          and has further restrictions
+ 
+

@@ -1,0 +1,72 @@
+--------------------Configuration: nautilus - Win32 Release--------------------
+Begining build with project "\\Snoopy\dorsey\nautilus.17a\nautilus.dsp", at root.
+Active configuration is Win32 (x86) Console Application (based on Win32 (x86) Console Application)
+
+Project's tools are:
+			"32-bit C/C++ Compiler for 80x86" with flags "/nologo /ML /W3 /GX /O2 /I "rsaref" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "ORDER_DCBA" /D NTP_CLASSES=X(ntp_udp) /FR"Release/" /Fp"Release/nautilus.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c "
+			"Win32 Resource Compiler" with flags "/l 0x409 /d "NDEBUG" "
+			"Browser Database Maker" with flags "/nologo /o"Release/nautilus.bsc" "
+			"COFF Linker for 80x86" with flags "kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wsock32.lib winmm.lib /nologo /subsystem:console /incremental:no /pdb:"Release/nautilus.pdb" /machine:I386 /out:"Release/nautilus.exe" "
+			"Custom Build" with flags ""
+			"<Component 0xa>" with flags ""
+
+Creating temp file "C:\TEMP\RSP512.tmp" with contents </nologo /ML /W3 /GX /O2 /I "rsaref" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "ORDER_DCBA" /D NTP_CLASSES=X(ntp_udp) /FR"Release/" /Fp"Release/nautilus.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"\\Snoopy\dorsey\nautilus.17a\cli.c"
+"\\Snoopy\dorsey\nautilus.17a\comm.c"
+"\\Snoopy\dorsey\nautilus.17a\config.c"
+"\\Snoopy\dorsey\nautilus.17a\crypt.c"
+"\\Snoopy\dorsey\nautilus.17a\init.c"
+"\\Snoopy\dorsey\nautilus.17a\naut_bf.c"
+"\\Snoopy\dorsey\nautilus.17a\talk.c"
+"\\Snoopy\dorsey\nautilus.17a\util.c"
+"\\Snoopy\dorsey\nautilus.17a\versions.c"
+"\\Snoopy\dorsey\nautilus.17a\win32.c"
+>
+Creating command line "cl.exe @C:\TEMP\RSP512.tmp" 
+Creating temp file "C:\TEMP\RSP513.tmp" with contents <kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wsock32.lib winmm.lib /nologo /subsystem:console /incremental:no /pdb:"Release/nautilus.pdb" /machine:I386 /out:"Release/nautilus.exe" 
+.\Release\bitstrm.obj
+.\Release\cli.obj
+.\Release\comm.obj
+.\Release\config.obj
+.\Release\crc.obj
+.\Release\crypt.obj
+.\Release\des3.obj
+.\Release\dhparams.obj
+.\Release\getopt.obj
+.\Release\idea.obj
+.\Release\init.obj
+.\Release\lpc10.obj
+.\Release\naut_bf.obj
+.\Release\nsp.obj
+.\Release\ntp.obj
+.\Release\ntp_tab.obj
+.\Release\ntp_udp.obj
+.\Release\sha.obj
+.\Release\sp2bits.obj
+.\Release\sp64.obj
+.\Release\sp85.obj
+.\Release\talk.obj
+.\Release\util.obj
+.\Release\versions.obj
+.\Release\win32.obj
+.\Release\win32ai.obj
+.\Release\win32ao.obj
+.\lpc10\Release\lpc10.lib
+.\rsaref\Release\rsaref.lib>
+Creating command line "link.exe @C:\TEMP\RSP513.tmp" 
+Compiling...
+cli.c
+comm.c
+config.c
+crypt.c
+init.c
+naut_bf.c
+talk.c
+util.c
+versions.c
+win32.c
+Linking...
+
+
+
+nautilus.exe - 0 error(s), 0 warning(s)

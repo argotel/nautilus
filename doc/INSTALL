@@ -1,0 +1,68 @@
+Installation Instructions for Nautilus
+--------------------------------------
+
+To compile Nautilus, you'll need the RSAREF 2.0 library, available for
+free for non-commercial use in the US and Canada from RSA Laboratories
+(anonymous ftp to rsa.com for details).
+
+I.  MSDOS Systems
+
+    These instructions assume you have Microsoft C version 7.0 or
+    later.  The makefile for Nautilus currently only works with
+    Microsoft C, so if you have some other compiler, you're on
+    your own.  If you do manage to get Nautilus to build with
+    some other compiler, please send me the makefile that you
+    used and I'll include it in future releases.
+
+    1)  Unpack the source distribution into a build directory.
+    2)  Unpack the RSAREF 2.0 library and install it in a directory
+        named 'rsaref' in the main build directory.
+    3)  Change to the rsaref\install\dos subdirectory.
+    4)  Copy the makefile in this directory to the parent directory.
+    5)  Change to the rsaref\install subdirectory.
+    6)  Use the Microsoft C 'nmake' program to build rsaref.lib
+    7)  Copy the rsaref.lib library to the main build directory.
+    8)  Change to the lpc10 subdirectory.
+    9)  Copy makefile.dos to makefile.
+    10) Use the Microsoft C 'nmake' program to build lpc10.lib.
+    11) Change to the main build directory.
+    12) Copy makefile.dos to makefile.
+    13) Use the Microsoft C 'nmake' program to build nautilus.exe.
+
+    Alternatively, you can construct a project file for Nautilus
+    and build it from within the project manager.  Just use the
+    existing makefile to guide you in the process of setting this
+    up.
+
+II.  Unix Systems
+
+    Nautilus currently runs on Sun workstations with audio hardware
+    running SunOS 4.1.X and Solaris 2.X.  It also runs on IBM
+    PC-compatibles running Linux.  To build Nautilus, you will need an
+    ANSI C compiler like gcc.
+
+    To build Nautilus under SunOS/Solaris/Linux, perform the following
+    steps:
+
+    1)  Unpack the source distribution into a build directory.
+    2)  Unpack the RSAREF 2.0 library and install it in a directory
+        named 'rsaref' in the main build directory.
+    3)  Change to the rsaref/install/unix subdirectory.
+    4)  Copy the makefile in this directory to the parent directory.
+    5)  Change to the rsaref/install subdirectory.
+    6)  Edit the makefile if necessary.
+    7)  Type 'make rsaref.a' to build the rsaref library.
+    8)  Change to the main build directory.
+    9)  Link (or copy) makefile.unx to Makefile.
+    10) Edit RSAREF in the Makefile to point to your RSAREF parent directory
+    11) Type 'make'.  You will be presented with a list of platforms
+	for which the makefile knows how to build Nautilus.  If you are
+	building on a different platform, you will need to edit the
+	Makefile to include support for your platform first (additional
+	changes may also be necessary to the source code).
+    12) Type 'make <platform>' where platform is one of the options
+        listed when you typed make in step 3 above.  If all goes
+        well, a nautilus executable (and optionally a 'nuke' and
+        'unnuke' executable) will be produced.
+    13) Type 'make install' to copy nautilus to /usr/local/bin and
+        doc/nautilus.1 /usr/local/man/man1.

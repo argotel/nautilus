@@ -1,0 +1,20 @@
+Source: nautilus
+Section: non-free
+Priority: optional
+Maintainer: Johannes Poehlmann <johannes.poehlmann@lst.de>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.1
+Homepage: http://nautilus.berlios.de
+
+Package: nautilus
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: also-oss
+Description: secure dialup/IP voice phone
+	Nautilus allows half-duplex encrypted-voice conversation over standard
+	phone lines or network links.  It requires a PC or Sun Sparcstation with
+	speakers and microphone.  Additionally, a 4800 bps or faster modem or
+	IP network connection to another computer running nautilus is required.
+
+
+

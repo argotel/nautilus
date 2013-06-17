@@ -1,0 +1,1089 @@
+See URL: <http://www.lila.com/nautilus> for the most up-to-date copy of
+the Nautilus manual and for general information related to Nautilus.
+
+----------------------------------------------------------------------------
+
+Index of the Nautilus v1.6 Documentation:
+
+   * Introduction
+   * System Requirements
+   * Quick Start
+   * Compiling Nautilus
+   * Environment Variables
+   * Configuring Nautilus
+   * Running Nautilus
+   * Appendix A: Getting Nautilus
+   * Appendix B: Cryptography and Security
+   * Appendix C: Nautilus Key Exchange Protocol
+   * Appendix D: Man in the Middle (MITM) attack
+
+----------------------------------------------------------------------------
+
+     "Indeed, it seems that the phrase `National Security' is now the
+     root password to the Constitution.  And as with any dishonest
+     superuser, the best user countermeasure is strong encryption."
+
+                                  -- Phil Karn
+
+----------------------------------------------------------------------------
+
+1. Introduction
+
+What Nautilus Is
+
+Nautilus is a program that lets you have encrypted voice telephone
+conversations with your friends without needing any special equipment. All
+you need is a standard personal computer (386/25 or faster PC with
+Soundblaster compatible sound board, or Sun Sparcstation) and a high speed
+modem. Its speech quality is reasonably good at 14.4 kbps and acceptable at
+9600 or 7200 bps. 7200 bps is low enough to work fairly reliably even over
+cellular telephones. A new coder was added for the v1.5 release which allows
+Nautilus to use a 4800 bps data rate. This coder has better sound quality
+than the 7200 bps coder and should work even more reliably on cellular
+phones because of its lower bit rate, but it needs a fast CPU with
+floating-point hardware in order to function. A 486DX2-66 is about the
+minimum necessary for its use.
+
+Telephones are a much less secure medium than most people realize. It is
+relatively easy for anyone (not just law enforcement agencies) to eavesdrop
+on your phone conversations, without needing access to your phone wiring. By
+dialing into telephone switches using access codes stolen from dumpsters,
+"phone phreaks" can monitor your calls from across the country. Even the FBI
+has been wire-tapped using these methods. And government abuse of wiretaps
+against political opponents and others is well known. With cellular
+telephones, the situation is even worse. Anyone with a simple scanner or
+even a 1970's-vintage television set can eavesdrop on cellular conversations
+with no special skills or equipment. (This is because cellular phones
+operate on frequencies formerly occupied by UHF TV channels 69 to 83, and
+older TV sets can still pick up these frequencies).
+
+Anyone with a need for privacy in their phone calls should consider using
+Nautilus. Journalists talking with sources, lawyers talking to clients,
+businesspeople discussing company secrets, and couples wanting to talk about
+intimate matters all need privacy. You may need it too.
+
+Nautilus is the first program of this type that we know of to be distributed
+for free with source code. A few similar programs have been distributed
+without source, so that their security cannot be independently examined. We
+have serious reservations against using any security program distributed
+without source, even if the author and distribution channel is trusted,
+because programs of this type need to be reviewed carefully by as many
+people as possible. Consider the famous Netscape 1.0 security bug (now fixed)
+where the internal random number generator was seeded from the system clock
+and other sources with just a few total bits of entropy. This meant that
+crackers could read Netscape credit card transactions using only minutes of
+computing time. External review would catch bugs like this very quickly. Who
+knows how many other bugs of this type a program like Netscape might have?
+
+Even Federally supported and supposedly 'secure' digital signatures (DSS)
+has been proven to be able to leak private signatures in certain
+implementations (Schneier, 1st ed. p 304). Remember, you are closer to
+that company who's product you trust than they are to you.
+
+Get It While You Can
+
+Certain parts of the US Government appear to be working to ban civilian use
+of cryptography whose keys are not accessible to the government. Shortly
+after the notorious key-escrowed Clipper chip was first announced, the FBI
+testified before Congress that it was intended as a completely voluntary
+system. But the Electronic Privacy Information Center, using the Freedom of
+Information Act, recently obtained a briefing sent by FBI director William
+Sessions to the National Security Council, titled "Encryption: The Threat,
+Applications, and Potential Solutions". The briefing was prepared by the
+FBI, the NSA, and the Department of Justice, and said among other things:
+
+     Technical solutions, such as they are, will only work if they are
+     incorporated into *all* encryption products. To ensure that this
+     occurs, legislation mandating the use of Government-approved
+     encryption products or adherence to Government encryption criteria
+     is required.
+
+Several other documents obtained at the same time reinforce the obvious
+implications of this passage. Unless there has been a total policy reversal
+at the upper levels of these security agencies since February 1993, we
+conclude that there is a continuing desire on their part to make programs
+like Nautilus illegal sometime in the future. We will have to stop further
+development and distribution if that happens.
+
+Recent events, like the Digital Telephony Act of 1994 give police agencies
+much broader powers to conduct "legal" wiretaps (up to 1% of all American
+phones) *without* a warrant. 500 million dollars has been budgeted by the
+Federal Government to pay private and public companies which produce PBX's
+and other switching equipment to produce new telephony equipment with
+built-in digital remote wiretapping ability over the years of 1995-1997.
+Although this same law which also "deregulates" the industry, the intent
+to tap U.S. citizen's home, business and cellular phones is written in
+black and white. And Attorney General Janet Reno has stated in CNN color
+that she expects to be able to tap criminals, not the phone. This is the
+Justice Department's desire for "roving wiretaps", designed to tap any
+phone which a suspect might use. Including yours. If you pay U.S. taxes
+you are paying for this directly.
+
+Fortunately, the DTA does not prohibit the use of encryption products and
+techniques such as Nautilus. See http://www.cdt.org/digi_tele/ for more
+information.
+
+We believe that the US Constitution entitles every citizen to use secure
+communications to which only he or she controls the keys (see the First and
+Fourth Amendments for more information). So we urge everybody to get a copy
+of Nautilus *now* and start using it. Although we have many enhancements
+planned for future versions that will make Nautilus better, the current
+version is already reliable and provides everything necessary to protect
+your privacy even if no further improvements are released.
+
+For more info about the recently published FBI documents, see the Electronic
+Privacy Information Center's web page on the subject at
+http://www.epic.org/crypto/ban/fbi_dox/.
+
+How Nautilus Works
+
+Nautilus uses your computer's audio hardware to digitize and play back your
+speech using one of several different speech compression algorithms built
+into the program. It encrypts the compressed speech using your choice of
+three different encryption functions, and transmits the encrypted packets
+over your modem to your friend's computer. At the other end, the process is
+reversed. The program is half-duplex; just hit a key to switch between
+talking and listening.
+
+Nautilus's encryption key is generated in one of two ways. Earlier versions
+of Nautilus generated an encryption key from a shared secret passphrase that
+you and your friend would choose together ahead of time. Beginning with
+version 1.5, Nautilus generates the encryption key using the Diffie-Hellman
+key exchange algorithm by default, although users may still revert to the
+secret passphrase method if they prefer. Either way, once the key is agreed
+on, the rest of the conversation is encrypted with your choice of secret key
+cipher using the agreed-on key. Nautilus's three secret key ciphers are
+(in order of decreasing speed) Blowfish, IDEA, and Triple DES. Blowfish is
+the default.
+
+Further details about Nautilus's cryptography can be found in the
+Cryptography appendix (Appendix B).
+
+----------------------------------------------------------------------------
+
+2. System Requirements
+
+Nautilus currently runs on two hardware platforms: IBM PC-compatibles and
+desktop Sun Sparcstations (sun4c or sun4m architectures). For the IBM PC,
+you will need to run MS-DOS, Linux, or possibly Solaris X86. For the
+Sparcstations, you will need SunOS or Solaris. In each case, you need a 4800
+bps modem or faster, or a direct connection to the Internet. See below for
+info on specific systems.
+
+Security Note
+
+For most uses of Nautilus, the Unix/Linux versions provide good security.
+But for highest security, you should use the MSDOS version of Nautilus,
+under vanilla MSDOS. Do *not* use a DOS emulator under Linux or a DOS box
+under Windows. This is because multitasking OS's such as Unix and Windows
+use a "swap file" on disk to store data from tasks not currently running and
+the OS's generally do not take special measures to zero out the swap file
+after the process finishes. If the session key for your conversation is
+stored in the swap file, an attacker with access to your machine may be able
+to recover it later. There is nothing that an application program like
+Nautilus can do about this without special help from the OS kernel which is
+not always available.
+
+Sun Sparcstation
+
+Nautilus runs on desktop Sun Sparcstations under SunOS and Solaris using the
+built-in audio hardware. If you are using a Sparcstation, you don't need to
+worry further about your hardware configuration (except the modem).
+
+IBM PC Compatible (MSDOS)
+
+If you're using a PC, you need a 386/25 or faster processor (floating point
+is not required) and a Soundblaster-compatible audio board. Boards that
+provide Soundblaster emulation through software drivers rather than hardware
+compatibility will not work. In particular, no sound boards that attach to
+the computer via a PCMCIA slot or parallel port will work. This is because
+Nautilus uses the Soundblaster's DMA functions and those functions work only
+through the ISA bus.
+
+The easiest way to find out if Nautilus can use particular sound card
+without trying it is to ask whether it supports all versions of the computer
+game DOOM. DOOM has the same audio hardware requirements as Nautilus, and is
+popular enough that vendors and dealers usually will know if a card they
+sell supports it. DOOM also has similar CPU requirements to Nautilus, so if
+your computer can run DOOM with all of its sound effects (not just music),
+it should be able to run Nautilus.
+
+IBM PC Compatible (Linux)
+
+Nautilus's CPU requirements under Linux are similar to its requirements
+under MS-DOS, except that the current version requires floating point
+hardware (387, 486dx, etc.). A future version may be able to run without
+floating point, just like the DOS version, but don't hold your breath.
+
+On the plus side, the Linux version of Nautilus uses Linux's /dev/dsp
+interface to control the sound board. This means it can use any sound board
+for which Linux has a driver. The Linux sound driver, called Unix Sound
+System (formerly known as VoxWare), currently supports at least the
+following sound cards: Soundblaster (and SBPro and SB16), Pro Audio Spectrum
+16, Gravis Ultrasound. The Linux Sound HOWTO document also has a section on
+sound cards supported by the sound driver under Linux.
+
+A patch for the Linux kernel MAY allow a future version of Nautilus to
+prevent itself from being swapped out. A copy of this patch is available
+from
+ftp://ftp.cc.gatech.edu/pub/linux/kernel/patches/misc/POSIX.4_locking.tar.gz.
+This patch has not been tested by us, nor have we yet added code to Nautilus
+which would take advantage of this feature.
+
+Modem
+
+You need a 14,400 bps or faster data connection to get the best speech
+quality. However, Nautilus can also work at 9600 or 7200 bps with impaired
+intelligibility, without extra cpu requirements. With a fast cpu, it can
+work at 4800 bps with speech quality almost as good as the 14,400 bps coder.
+7200 bps is slow enough to work over cellular phones much of the time,
+especially if only one end of the connection is a cellular phone, and if the
+cellular phone is stationary (i.e., not in a moving car). 4800 bps is even
+more reliable. If you have trouble using Nautilus with a cellular modem, try
+moving your phone to somewhere where the reception is better and keep the
+phone stationary during the call.
+
+We consider cellular phones to be an important use for Nautilus and will
+continue to work on good quality coders that work at low bit rates.
+
+Table of Features by Platform
+
+                                IP Socket 7.2Kb/s 2.4Kb/s D-H Key
+                                 Support  Coders   Coder  Exchange
+      SunOS 4.1.x & 5.x [Image]     Y        Y       Y       Y
+
+          Linux 1.2 & Up            Y        Y       Y       Y
+
+          MS DOS w/ FPU             N        Y       Y       Y
+
+          MS DOS w/o FPU            N        Y       N       Y
+
+ Y          Support has been implemented and works
+ N          Support is not planned.
+ P          Support is in progress.
+ F          Support is planned but not in progress.
+
+[Image] NOTE: SunOS 5.x (Solaris 2.x) support is available. There is a
+problem in the audio driver that causes Nautilus to report ReadAudio()
+failures. We're trying to fix this bug but it should not affect performance.
+
+[Image] NOTE: There is a small bug with the audio drivers on some
+SparcStations. The sampling rate of the audio device may be faster or slower
+depending on the machine. This may manifest itself as one machine getting
+farther and farther behind while playing audio. Eg: SparcStation 10 talking
+to an IPX causes the IPX to fall behind. We're not sure which Sparcs have
+this problem with respect to others but the SS10 to IPX is one example. We
+also don't know if this will be a problem between Suns and PCs.
+
+----------------------------------------------------------------------------
+
+3. Quick Start
+
+For the impatient, here is enough information about using Nautilus to let
+you start using it immediately.
+
+You and your friend must agree on whether you will originate the call (dial
+out) or have your friend call you instead. The originator must know the
+answerer's telephone number, for a direct modem-to-modem connection, or
+their machine name or IP address, for an Internet connection. The answerer
+should run the program first, so their computer is waiting for the
+originator's computer to establish the connection.
+
+Originating an outgoing call
+
+To originate a call, first make sure the person you are calling is ready to
+accept your call. He or she should have be running Nautilus in answer mode,
+so that Nautilus is displaying "Waiting for incoming Nautilus connection" on
+his or her screen.
+
+Next, make sure your microphone is plugged into your computer and that it is
+turned on. Then, run the following command for a direct modem-to-modem
+connection under DOS:
+
+C:\NAUTILUS> nautilus -o -p COM2 12025551212
+
+Under Linux or Unix, you'd say
+
+bash$ nautilus -o -p /dev/modem 12025551212
+
+The "-o" option tells Nautilus to originate a call. The "-p" option tells
+Nautilus to use where to look for your modem. The last argument on the
+command line is the phone number you wish Nautilus to dial. Here is the
+Internet version of the command line (Linux/Unix only):
+
+% nautilus -o -i archie.sura.net
+
+Again, the "-o" option tells Nautilus to originate a call. The "-i" option
+tells Nautilus to use the Internet, rather than using a modem to dial the
+answerer's modem directly (you and the answerer can still be connected to
+the Internet via a modem, of course). The last argument on the command line
+is the name of the answerer's machine.
+
+Nautilus will now print some startup messages.
+
+It is important that your microphone be plugged in and turned on before you
+start up Nautilus, because Nautilus uses the audio energy coming into the
+microphone to initialize the random number generator with which it creates
+its session keys.
+
+Nautilus does this sampling and initialization shortly after printing the
+startup messages. Nautilus prints a rough estimate of the entropy found in
+the sample, and warns you if it thinks the value is too low. If there is not
+enough entropy, Nautilus's security may be compromised. This might happen if
+your microphone input is turned off or shorted, or if there is not enough
+sound reaching the microphone to give Nautilus the entropy it needs. The
+amount of sound required depends on your microphone's sensitivity and also
+on your computer's ambient noise level when you run Nautilus.
+
+If Nautilus prints such a warning message, you will have the opportunity to
+try again. Nautilus will record sound from the microphone for about 1/4 of
+second starting immediately after you press the return key, so blow into the
+microphone and continue blowing for a moment after pressing the return key.
+If you are not able to get the audio entropy to be something larger than 0,
+then it is likely that your microphone is off or not connected properly. If
+you are able to get values other than 0, but not high enough for Nautilus to
+accept them, it is likely that the recording level of your microphone input
+is set too low.
+
+Accepting an incoming call
+
+To accept an incoming call, use the following:
+
+C:\NAUTILUS> nautilus -a -p COM1
+
+The "-a" option tells Nautilus to answer the phone the next time someone
+calls, and the "-p COM1" option tells Nautilus to use COM1 to talk to the
+modem.
+
+Here is the Internet version of the command line:
+
+% nautilus -a -i
+
+The "-a" option tells Nautilus to wait for packets on the proper port to
+establish the connection. The "-i" has the same meaning as for the
+originator's command line above.
+
+As with originate mode, you must provide some noise into the microphone, or
+else Nautilus will give a warning that the audio entropy is too low.
+
+A note on security
+
+Nautilus normally initializes the encryption key for your conversation using
+an ingenious technique called Diffie-Hellman key exchange after its
+inventors, or DH for short. DH avoids the need for preagreed shared secrets
+such as passphrases, but can be vulnerable to a "man in the middle" (MITM)
+attack by an active eavesdropper. To defeat this attack, Nautilus prints an
+authentication code (8 hex digits) as part of the key exchange. One user
+simply reads this code (by voice) to the other user, who verifies it against
+the code displayed on his screen. If the codes at both ends of the
+conversation match, the conversation is secure.
+
+In general, it is good to know what computers and routers on the internet
+your conversation is going through, and the latency, or delay they cause.
+Under Unix, the commands 'traceroute' and 'ping' are useful for finding such
+information, although you should note that they use the ICMP protocol,
+whereas Nautilus uses UDP. For more info, see (Appendix D).
+
+Getting help
+
+Typing "nautilus -h" will list all available program options along with
+brief descriptions of their use. Also, running Nautilus with the "-v"
+(verbose) option will print info on the screen about Nautilus's parameters
+at startup time.
+
+----------------------------------------------------------------------------
+
+4. Compiling Nautilus
+
+This section tells you how to compile Nautilus on MSDOS and Unix systems. We
+distribute precompiled MSDOS binaries for user convenience, but for maximum
+security, you should compile any cryptographic program yourself on your own
+computer using a compiler that you know has not been tampered with.
+
+To compile Nautilus, you'll need the RSAREF 2.0 library, available for free
+for non-commercial use in the US and Canada from RSA Laboratories (see
+ftp://www.rsa.com/pub for details).
+
+I. MSDOS Systems
+
+These instructions assume you have Microsoft C version 7.0 or later. The
+makefile for Nautilus currently only works with Microsoft C, so if you have
+some other compiler, you're on your own. If you do manage to get Nautilus to
+build with some other compiler, please send us your changes and and we'll
+include them in future releases.
+
+  1. Unpack the source distribution into a build directory.
+  2. Unpack the RSAREF 2.0 library and install it in a directory named
+     'rsaref' in the main build directory.
+  3. Change to the rsaref\install\dos subdirectory.
+  4. Copy the makefile in this directory to the parent directory.
+  5. Change to the rsaref\install subdirectory.
+  6. Use the Microsoft C 'nmake' program to build rsaref.lib
+  7. Copy the rsaref.lib library to the main build directory.
+  8. Change to the lpc10 subdirectory.
+  9. Copy makefile.dos to makefile.
+ 10. Use the Microsoft C 'nmake' program to build lpc10.lib.
+ 11. Change to the main build directory.
+ 12. Copy makefile.dos to makefile.
+ 13. Use the Microsoft C 'nmake' program to build nautilus.exe.
+
+Alternatively, you can construct a project file for Nautilus and build it
+from within the project manager. Just use the existing makefile to guide you
+in the process of setting this up.
+
+II. Unix Systems
+
+Nautilus currently runs on Sun workstations with audio hardware running
+SunOS 4.1.X and Solaris 2.X. It also runs on IBM PC-compatibles running
+Linux. To build Nautilus, you will need an ANSI C compiler like gcc.
+
+To build Nautilus under SunOS/Solaris/Linux, perform the following steps:
+
+  1. Unpack the source distribution into a build directory.
+  2. Unpack the RSAREF 2.0 library and install it in a directory named
+     'rsaref' in the main build directory.
+  3. Change to the rsaref/install/unix subdirectory.
+  4. Copy the makefile in this directory to the parent directory.
+  5. Change to the rsaref/install subdirectory.
+  6. Edit the makefile if necessary.
+  7. Type 'make rsaref.a' to build the rsaref library.
+  8. Change to the main build directory.
+  9. Link (or copy) makefile.unx to Makefile.
+     (i.e. 'ln -s makefile.unx Makefile' or 'cp makefile.unx Makefile')
+ 10. Type 'make'. You will be presented with a list of platforms for which
+     the makefile knows how to build Nautilus. If you are building on a
+     different platform, you will need to edit the Makefile to include
+     support for your platform first (additional changes may also be
+     necessary to the source code).
+ 11. Type 'make <platform>' where platform is one of the options listed
+     when you typed make in step 3 above. If all goes well, a nautilus
+     executable (and optionally a 'nuke' and 'unnuke' executable) will be
+     produced.
+ 12. Type 'make install' to install the executable to /usr/local/bin
+     and the man page to /usr/local/man/man1.  Edit the makefile if you
+     want to install elsewhere.
+
+----------------------------------------------------------------------------
+
+5. Environment Variables
+
+Nautilus allows you to pre-specify a passphrase using an environment
+variable. Specifically, if one sets the NAUTILUS_PASSPHRASE variable before
+running Nautilus, the program will not prompt the user for a passphrase and
+will instead use the value of the environment variable. This enables
+Nautilus to be called from a script if the user so desires. CAUTION: Be very
+careful to destroy the NAUTILUS_PASSPHRASE variable when you are done with
+your conversation. If your passphrase is revealed to an enemy that has
+intercepted your transmission, the contents of your transmission can be
+easily decoded.
+
+On a PC running MSDOS, Nautilus requires a Soundblaster compatible sound
+card. Installation software that comes with your Soundblaster tries to
+configure your system so that the BLASTER environment variable is set.
+Nautilus reads the contents of this environment variable in order to
+determine the operating parameters for the card (I/O base address, IRQ,
+DMA). If you are using another vendor's card (it must be hardware compatible
+with the Soundblaster), that doesn't set the BLASTER environment variable,
+you will need to set up a Nautilus configuration file which will tell the
+program what parameters to use for your card. See the section on setting up
+configuration files for information on how to do this.
+
+----------------------------------------------------------------------------
+
+6. Configuring Nautilus
+
+Modem setup
+
+Like your modem, Nautilus has two basic modes of operation. It can either
+make a call (originate) or accept a call (answer). The "-o" option tells
+Nautilus to originate a call, and the "-a" and "-A" commands tell Nautilus
+to answer a call.
+
+Nautilus assumes default settings for which serial port to use on your
+computer, and at what speed to communicate with the modem (DTE speed). The
+default serial port is COM1 and the default DTE speed is 19,200. We
+recommend you use the default DTE speed of 19,200. Even though your modem
+may be able to use compression to transfer some kinds of data faster than
+its rated speed, it will not be able to compress the information sent to it
+by Nautilus.
+
+You also may need to turn off error correction (LAPM/MNP) on your modem,
+as retransmission data may cause out-of-sequence packets.  See the example
+nautilus.cfg for how to do this on a USRobotics.
+
+If you have a modem that has a throughput of 19,200 bps or more
+(e.g. V.32 turbo, V.FC, V.34, and HST), you may want to increase the DTE
+speed to 38400, but make sure you have a high speed serial card (with a
+16550A UART) before you do this.  If your modem is internal, you do not
+have to worry about this, as internal modems emulate the UART.  However,
+some problems have been reported with SoundBlaster-compatible soundcards
+repeating speech when transmission is too fast.  If you experence this,
+scaling back to 19200 should fix the problem.
+
+IMPORTANT: You must configure your modem to use hardware flow control for
+Nautilus to work. Unfortunately, the method for doing this varies from one
+brand of modem to another, so Nautilus cannot automatically do it for you.
+On the USR Courier or Sportster modem, sending the string "AT&F1" will set
+hardware flow control among other things. For other modems, please consult
+your modem manual.
+
+In order to change the default port from COM1 to something else, use the
+"-p" option followed by the name of the port you wish to use. The following
+table describes which ports may be selected:
+
+   * COM1, at I/O address 0x3F8, using IRQ4
+   * COM2, at I/O address 0x2F8, using IRQ3
+   * COM3, at I/O address 0x3E8, using IRQ4
+   * COM4, at I/O address 0x2E8, using IRQ3
+
+These are the "usual" COM port settings for PC-Compatible computers. Note
+that in order to prevent interrupt conflicts, it is not possible to use both
+COM1 and COM3 or COM2 and COM4 at the same time, unless you steal an IRQ
+from something else (like an unused LPT2).
+
+If you are using nonstandard addresses or IRQ's for your COM ports, you need
+to customize Nautilus for your system using a configuration file. See the
+"Setting up configuration files" section of this document for more info.
+
+If you wish to change the default DTE speed on the command line from 19,200
+to a higher value, use the "-s" option followed by the speed you wish to use.
+
+Speech Coders
+
+Nautilus currently includes four speech compression algorithms, also called
+"coders". "Coder" is a speech processing term that has nothing to do with
+cryptography; in this document we always refer to cryptographic coding as
+"encryption" and cryptographic codes as "ciphers" to distinguish this
+subject from speech coding.
+
+The purpose of a speech coder is to convert raw digitized speech samples
+into a compressed form that can be sent over channels with limited
+bandwidth. Designing good speech coders is a highly technical subject
+involving tradeoffs between CPU power, data bandwidth, sound quality, and
+difficulty of implementation. Nautilus's current coders are fairly
+sophisticated, though there is still room for improvement.
+
+Generally, today's best-performing speech coders run on special-purpose
+digital signal processing hardware since they need more CPU power than
+typical PC's can provide. But as PC's get faster, we may be able to support
+higher quality coders.
+
+Three of Nautilus's currently running speech coders use a technique called
+"switched prediction". Switched-predictive coders give a good tradeoff
+between CPU speed requirements and speech quality at a given bit rate.
+Nautilus has three SP coders with differing modem speed requirements, called
+SP64, SP85, and SP124. The numbers refer to the bit rates used by the
+coders: approximately 6400, 8500, and 12400 bits per second respectively,
+with the higher bit-rate coders naturally sounding the best. Because of the
+added data overhead imposed by Nautilus's two-way communication protocol,
+the coders require modem connections of 7200, 9600, and 14,400 bps
+respectively. 28,800 bps (v.34) modems are readily available at this time,
+so speed is not an issue unless you have an older modem or a poor (or
+cellular) connection.  9600 bps (v.32) is used by some older modems and is
+used as a fallback speed for 14,400 bps modems when the phone lines are noisy. 7200 bps seems to be
+about the highest speed that works reasonably well with v.32bis modems over
+cellular telephones and even that speed requires a fairly good cellular
+connection.
+
+Nautilus's newest coder, LPC10, uses Linear Predictive Coding, and
+compresses speech to 2400 bps with quality nearly as good as the SP124
+coder. This comes at the expense of significantly more CPU time, although it
+is able to run comfortably on a Sparc 2 or 486DX2-66 (slower machines may be
+possible). It will not run quickly enough on a machine without an FPU.
+Nautilus's overhead increases the bandwidth required to about 2800 bps for a
+direct modem-to-modem connection, and additional IP overhead increases this
+to about 4100 bps for an Internet connection. In either case, it should work
+with a 4800 bps connection, which is the lowest fallback speed that you
+normally ever get when you use a v.32 or faster modem. If your modem can
+connect at all (including over cellular phones) and you can run LPC10,
+Nautilus should work.
+
+The LPC10 coder was obtained from URL:
+
+ftp://ftp.super.org/pub/speech/ in file lpc10-1.0.tar.gz, and before that it
+came from the NSA (yes, that NSA). It was modified somewhat so that it could
+be included in Nautilus. The original and modified code is in Fortran, and
+the modified sources are available from:
+http://www.arl.wustl.edu/~jaf/lpc/
+
+By default, Nautilus automatically selects the best sounding coder that will
+run on both users' machines. Either user can override the default coder by
+using the "-c" option. The option should be followed by the name of the coder
+you want ("SP64", "SP85", "LPC10" or "SP124"). You can also use the
+"-l coders" option to get a list of available coders (new ones may be added
+in future releases).
+
+See the bibliography file "nautilus.bib" in this directory for references
+about speech coding and other subjects.
+
+Ciphers
+
+You may specify one of three encryption algorithms to secure your
+conversation from would-be eavesdroppers. Triple-DES is the most proven of
+the available ciphers, but also uses the most CPU. Blowfish is a relatively
+new cipher designed by the author of _Applied Cryptography_, Bruce Schneier,
+that is fast and shows promise of being strong (see
+http://www.counterpane.com). Finally, IDEA is another cipher popularized by
+PGP that has been included for completeness. Encryption can be specified
+using the "-e" option and following it with the name of the specified cipher
+or "NONE" to turn encryption off. Note that if the "-e" option is not
+specified, Nautilus will use the Blowfish cipher by default. To get a list
+of available ciphers, use the "-l ciphers" option.
+
+Setting up configuration files
+
+Nautilus can read in a number of parameters from a configuration file. The
+parameters can be used to configure your serial port, sound card, and modem
+initialization string. If you are using a sound card that does not set the
+BLASTER environment variable (it must be soundblaster compatible), then you
+will have to set up a configuration file in order to configure it for use
+with your card.
+
+The environment variable NAUTILUS_CONFIG_FILE specifies the pathname to a
+Nautilus configuration file. If the environment variable doesn't exist,
+Nautilus doesn't read a configuration file and uses its defaults. If it does
+exist, Nautilus attempts to read the file specified and overrides the
+defaults with the user-specified values.
+
+The syntax of the configuration file is:
+
+   * White space is ignored
+   * All characters between a '#' and the end of a line are ignored
+   * Case is not significant
+   * An alpha character marks the beginning of an identifier
+   * Identifiers may contain alpha characters, numbers, and underscores only
+   * A number marks the beginning of a numeric constant. If the number
+     begins with "0x", it is interpreted as hexadecimal; otherwise, it is
+     considered decimal.
+   * A quote marks the beginning of a string constant
+   * Statements of the form: <identifier> = <constant> are the only legal
+     statements currently accepted by the parser
+
+The following is a list of configuration variables and their types:
+
+SPEED (numeric)      - DTE baud rate
+PORT (string)        - port name (e.g. COM2)
+MODEM_INIT (string)  - modem initialization string (don't include "AT")
+
+SND_IO (numeric)     - i/o base address of sound card
+SND_IRQ (numeric)    - irq number of sound card
+SND_DMA (numeric)    - dma channel of sound card
+MIC_SENS (string)    - mic sensitivity (one of "LOW", "MEDIUM", or "HIGH")
+OUT_VOLUME (string)  - output volume (one of "LOW", "MEDIUM", or "HIGH")
+
+COM1_IO (numeric)    - i/o base address of COM1 serial port
+COM2_IO (numeric)    - i/o base address of COM2 serial port
+COM3_IO (numeric)    - i/o base address of COM3 serial port
+COM4_IO (numeric)    - i/o base address of COM4 serial port
+
+COM1_IRQ (numeric)   - IRQ (interrupt number) of COM1 port
+COM2_IRQ (numeric)   - IRQ (interrupt number) of COM2 port
+COM3_IRQ (numeric)   - IRQ (interrupt number) of COM3 port
+COM4_IRQ (numeric)   - IRQ (interrupt number) of COM4 port
+
+UPGRADE_FILE (string)- filename to save upgrade instructions
+                       if you try talking to an incompatible
+                       version of Nautilus.  The instructions
+                       are also shown on the screen.  If you
+                       don't want them saved, set this to "".
+                       Default setting is filename "UPGRADE".
+
+An example configuration file follows:
+
+#
+# Example Nautilus Configuration File
+#
+PORT = "COM2"           # specify default serial port
+SPEED = 38400           # specify default DTE speed
+MODEM_INIT = "M0"       # turn modem speaker off
+SND_IO = 0x220          # specify I/O Base address of sound card
+SND_IRQ = 5             # specify IRQ for sound card
+SND_DMA = 1             # specify DMA channel for sound card
+MIC_SENS = "HIGH"       # specify high mic sensitivity
+OUT_VOLUME = "LOW"      # specify low audio output level
+
+----------------------------------------------------------------------------
+
+7. Running Nautilus
+
+When you first start Nautilus up, it will play the message "Welcome to
+Nautilus" through your sound card. This lets you know that Nautilus is
+properly configured to use your sound card. If you prefer not to hear this
+message, you may specify the "-x" option on the command line.
+
+Putting it all together:
+
+To originate a call to another Nautilus user, type:
+
+C:\NAUTILUS> nautilus -o -p com2 -s 38400 12025551212
+
+This tells Nautilus use serial port COM2 with a DTE speed of 38400, to dial
+the phone number "12025551212", and attempt to connect to an awaiting
+Nautilus program at the other end.
+
+To answer a call from another Nautilus user, type:
+
+C:\NAUTILUS> nautilus -a
+
+This tells Nautilus to configure the user's modem to answer the phone and
+will then attempt to establish a connection to the remote Nautilus after the
+modems have connected. The default port, COM1 is used as well as the default
+DTE speed of 19,200, unless the .cfg file has been configured differently.
+
+After Nautilus starts up and plays its welcome message, it will prompt you
+to enter a passphrase (unless you have specified a passphrase via the
+NAUTILUS_PASSPHRASE environment variable). At this time, you should type in
+the passphrase you and your friend have previously agreed upon. You will be
+asked to type the phrase twice to insure that you have not made a mistake.
+If the two phrases don't match, you will be given the opportunity to try
+again.
+
+Once communication has been established, the originator will start out in
+talk mode. Pressing a key will cause Nautilus to switch modes between
+talking and listening. If the pass phrases typed by the users at both ends
+do not exactly match, the users will be unable to communicate with each
+other and will hear nothing but garbage coming out of their speakers.
+
+An important option to remember when using Nautilus is "-h" (for "help").
+Typing "nautilus -h" will cause Nautilus to print out a list of the commands
+it understands and their syntax. Also, running Nautilus with the "-v"
+(verbose) option will print info on the screen about Nautilus's parameters
+at startup time.
+
+IMPORTANT
+
+As of this release (version 1.5d), Nautilus has been through five public beta
+test releases and reviewed by several expert cryptographers, and nobody has
+discovered any serious security problems with it. Some minor problems were
+found and fixed during the beta tests. We now have more confidence in
+Nautilus's security than we have for any comparable programs, mostly because
+the other programs have not withstood public scrutiny of their source code
+for as long (or at all).
+
+The lpc10 coder has undergone some optimization for 1.5d and any feedback
+on it is welcome.
+
+Nonetheless, it's still possible that Nautilus has some security bugs that
+haven't yet been discovered. Although we now consider Nautilus to no longer
+be in "beta test", it has still not gotten nearly as much scrutiny as some
+of the better known email encryption programs. For very high security
+applications, we recommend avoiding placing your total faith in the security
+of Nautilus or any other link in your system. Rather, take an in-depth
+approach to security so that if any aspect of your communications chain is
+compromised, your overall system is still not broken.
+
+We continue to encourage cryptographers and users alike to examine and test
+the program thoroughly, and *please* let us know if you find anything wrong.
+As usual, although we'll try to fix any bugs reported to us, WE CANNOT BE
+RESPONSIBLE FOR ANY ERRORS. Even if it uploads all your secret files to your
+mother-in-law's computer in the middle of the night.
+
+----------------------------------------------------------------------------
+
+APPENDIX A: Getting Nautilus
+
+FTP SITES
+
+Nautilus is available in three different formats. As a DOS executable, it is
+available as an archive in zip format along with it's associated
+documentation. In source format, it is available as either a zip-ed archive,
+or a gzip-compressed tar archive.
+
+Various versions of Nautilus are available at the following FTP sites:
+
+ftp://ftp.csn.org:/mpj/I_will_not_export/crypto_???????/voice/
+
+This is an export controlled ftp site: read /mpj/README for information on
+access.
+
+ftp://ripem.msu.edu/pub/crypt/other/nautilus-phone-1.5a-source.tar.gz
+ftp://ripem.msu.edu/pub/crypt/msdos/nautilus-phone-1.5a-source.zip
+ftp://ripem.msu.edu/pub/crypt/msdos/nautilus-phone-1.5a-exe.zip
+
+This is an export controlled ftp site: read /pub/crypt/GETTING_ACCESS for
+information on access.
+
+You may be able to find additional ftp sites using the "archie" ftp site
+locating program. See http://www.earn.net/gnrt/archie.html for more info.
+
+International Use
+
+Sorry, but under current US law, Nautilus is legal for domestic use in the
+US only. We don't like this law but have to abide by it while it is in
+effect. Nautilus is distributed through export-restricted FTP sites for this
+reason. Export it at your own risk.
+
+Contacting The Developers
+
+The Nautilus development team is now made up of Bill Dorsey, Paul Rubin,
+Andy Fingerhut, Paul Kronenwetter, Bill Soley, Pat Mullarky, and David
+Miller. To contact the developers, send email to <nautilus@lila.com>.
+
+This announcement, and the source and executable distribution files, are all
+signed with the following PGP public key. Please use it to check the
+authenticity of the files and of any fixes we may post. You can also use it
+to send us encrypted email if you want. We will try to keep such email
+confidential, but cannot guarantee it. Encrypted messages will probably get
+slower replies than unencrypted ones, because of the inconvenience of the
+decryption process at our end. Please use unencrypted email unless you need
+to send us something that really needs privacy.
+
+pub  1024/FEFEDA09 1996/05/27 Nautilus Developers <nautilus@lila.com>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: 2.6
+
+mQCNAjGpL2QAAAEEALa5+7iMr/mTZc0+hpCY03y1cLSrZjEDCfGKDNr1dBvLj9O5
+xnNagh1WWXhCccvzsva0Qs7+9H+IwJCCEqsOuA76aTf0wfLnJ6U5lwbcmB9jlter
+D1bgVNRP20zWOP+MwU4uaUWib3l10RtDZM99kadlJNzT2PYq0vai5J3+/toJAAUR
+tCdOYXV0aWx1cyBEZXZlbG9wZXJzIDxuYXV0aWx1c0BsaWxhLmNvbT6JAJUCBRAx
+qTApg1x2TS1X7GUBATEnA/9+v4yEygNsxy05zYBLjKwI3E3FEUXMh7GjSfF+yp4b
+iencWiErdsoiZl5fMzhAIzfrECaiHNFhSVokaXHjVL/SSlPfB/RF9LpekCxM4HKy
+DGFxJlYfFelpvLXnhWy8tw3xMM8h40YinH/JFI7I4WLBAqFC7JwKXaoh5bbFwpVw
+4A==
+=YRNN
+-----END PGP PUBLIC KEY BLOCK-----
+
+Acknowledgements
+
+Nautilus's 3DES implementation is adapted from code written by Richard
+Outerbridge. The IDEA implementation is by Colin Plumb. The Blowfish
+implementation is adapted from Bruce Schneier's original version, though
+we've optimized it considerably. Dan Bernstein, Colin Plumb, and Bob Baldwin
+examined the cryptographic protocols in the beta test versions and spotted
+some errors as well as making other worthwhile suggestions. Andy Fingerhut
+cleaned up and commented some of the speech compression code in version 1.0
+and got the Linux port working again.
+
+Nautilus Developer's PGP Key
+
+The Nautilus Developer's Key should not be used for the moment. They will be
+generating a new key shortly. In the meantime, if you must send sensitive
+information, please use Bill Dorsey's key (dorsey@lila.com).
+
+----------------------------------------------------------------------------
+
+APPENDIX B: Cryptography and Security
+
+A later version of this appendix will include advice on key selection and
+exchange, other privacy issues, etc. For now, here is what we have.
+
+Nautilus's Ciphers
+
+Nautilus provides three ciphers: Triple DES, Blowfish, and IDEA. No
+published methods exist that even make a scratch in the security of any of
+these algorithms. Blowfish is the fastest and the most technically
+straightforward, and is possibly the most secure of the three. But because
+it relatively new, there is a higher potential of effective attacks against
+it being discovered. Triple DES (abbreviated 3DES) is the most established
+cipher and has withstood over two decades of intense scrutiny by
+cryptographers. It is the safest choice, but it is slow. You might not be
+able to use 3DES with Nautilus on a 386-based computer (a 486 or higher PC
+or a Sparcstation should be no problem, but a 386DX/25 is known to not be
+fast enough). IDEA, like Blowfish, is relatively new; it also incorporates
+some unusual design principles that some cryptographers consider
+questionable. It is faster than 3DES but slower than Blowfish. Also, IDEA is
+patented; it is licensed for noncommercial use, but if you use Nautilus for
+business purposes, selecting the IDEA cipher may be a patent infringement.
+We include IDEA because it is used in the "PGP" email cryptography program;
+many PGP users have come to trust it, so we offer them the option of using
+it if that's what they want.
+
+Blowfish is Nautilus's default cipher because of its speed, security,
+traditional design, and freedom from patents. If you don't make your own
+selection, you'll get Blowfish. But the choice is up to you.
+
+A word about encryption and security
+
+All reliable signs are that Nautilus's cryptographic algorithms (especially
+3DES) are completely unbreakable in practice, even by three-letter agencies.
+If someone does have a method that can break the ciphers, the method is only
+useful if they keep existence a deep secret--otherwise you could change
+ciphers and the attacker would have to start all over. And a fundamental
+fact about any secret weapon is that every time you use it, the less secret
+it becomes. So unless you're discussing matters so important that
+cryptanalysis organizations would find it worth sacrificing part of the
+usefulness of their most valuable tools, you can probably treat Nautilus's
+ciphers as if they were totally impregnable.
+
+Unfortunately, a totally impregnable cipher used in an insecure way is like
+a totally impregnable steel bank vault door installed on a house with an
+unlocked window. If someone wants to eavesdrop on your communications while
+you're using Nautilus, cryptanalyzing the ciphers is probably the last thing
+they would try. You have to take precautions against other types of attacks
+as well.
+
+First of all, although Nautilus's ciphers themselves are very secure and the
+program itself has withstood some scrutiny over its past few releases, it
+may still contain bugs. Nautilus's basic methods are simple and sound, but a
+design oversight or programming error may have seriously weakened its
+security. So far, no major security bugs in any Nautilus release have been
+reported, but a few minor ones in the early beta test versions have been
+found and fixed. We always announce such bugs when we learn of them.
+
+Second, although Nautilus protects you from telephone line monitoring, it
+does nothing to protect you from other methods of privacy invasion. Indeed,
+history's most famous examples of electronic eavesdropping abuses--the
+Watergate break-in and the FBI's recordings of Martin Luther King--were done
+with room bugs rather than wiretaps. Secure telephones cannot protect your
+privacy against hidden microphones in your bedroom or office.
+
+A complete discussion of non-cryptographic security is beyond the scope of
+this document, so we'll leave you on your own regarding technical
+countermeasures against bugging (hint: no method is likely to be completely
+effective, and we're skeptical of the motives of most people trying to sell
+you expensive antibugging devices). One simple thing you can do is use a
+headset microphone plugged into your sound board, rather than a loudspeaker
+and handheld microphone. This will make it much more difficult for a room
+bug to pick up the other end of the conversation (unless the other room is
+also bugged).
+
+Finally, although the encrypted signals Nautilus passes through your modem
+cannot be decrypted without the secret key, your computer itself may leak
+unencrypted information either through electromagnetic radiation or because
+it has been tampered with. Displaying your passphrase on a CRT screen under
+any circumstances is a potentially grave mistake, since CRT emissions can be
+picked up from a considerable distance with the right equipment. With LCD
+screens, the problem may not be as bad--but we don't know. This subject also
+is beyond the scope of this document.
+
+Traffic Analysis
+
+While Nautilus protects the contents of your phone calls, it does not and
+cannot do anything to conceal what time you make them or what numbers you
+call. It is relatively easy for attackers to illegally obtain your phone
+records, even if you have asked the phone company to place a passcode on
+your account. This has actually happened to at least one Nautilus user who
+was being illegally harassed by a private investigator. The PI called the
+phone company claiming to be the person he was actually investigating and
+requested info from "his" phone bill. When the phone company representative
+asked for the passcode, the PI replied that he had just had eye surgery and
+could not read the code. By a combination of whining and bullying, the PI
+intimidated the phone company rep into giving him the info in violation of
+phone company policy. The rep was mortified to find out afterwards that he
+had been defrauded, but the damage was done.
+
+If you need to conceal the phone numbers of the people you talk to as well
+as the contents of the conversations, you must take further measures besides
+using Nautilus. Make the phone calls between public phones in places you
+cannot be predicted to be near. Don't call collect or use a phone company
+credit card associated with your phone account; use coins, or use a prepaid
+phone card that you bought with cash (7-11 stores sell these). Not many
+public phones today have data ports, but some do; they are generally easiest
+to find at airports. You can buy an acoustic coupler from Konexx that lets
+you connect your modem to a phone with no data port, though the bit rate may
+be low (possibly too low for Nautilus). If necessary, try several phones;
+and you may have best results with a v.34-capable modem even though you are
+only trying to get 7200 bps through the phone, because v.34 has potentially
+better impaired-line performance than v.32bis.
+
+----------------------------------------------------------------------------
+
+APPENDIX C: Nautilus Key Exchange Protocol
+
+Nautilus now offers two different key exchange protocols to select session
+keys. This is done at the start of the Nautilus data conversation. Once the
+session key is chosen, it is used to encrypt the digitized voice packets in
+CFB mode for the rest of the conversation.
+
+The two protocols offered are Diffie-Hellman key exchange and key exchange
+based on a pre-agreed shared secret passphrase. The DH protocol is very
+simple and exactly follows the standard references such as Applied
+Cryptography. Here is a description of the protocol used to derive a session
+key from pass phrases.
+
+  1. Users (originator and answerer) are prompted for a pass phrase.
+  2. Each side generates two different keys K1 and K2 by hashing the pass
+     phrase with two different salts S1 and S2.
+  3. Random number generator is seeded with input from the audio device.
+  4. Random number generator is used to generate the following random values
+     (called a key exchange structure) at each end:
+
+                KEY EXCHANGE STRUCTURE
+             +-------------------------+
+             | SESSION IV    (8 bytes) |
+             +-------------------------+ -
+             | TRANSMIT IV   (8 bytes) |  |
+             +-------------------------+  |
+             | RECEIVE IV    (8 bytes) |   >  Encrypted with selected cipher
+             +-------------------------+  |
+             | SESSION KEY  (56 bytes) |  |
+             +-------------------------+ -
+
+  5. The indicated portion of the key exchange structure is encrypted using
+     CFB mode. The "SESSION IV" is used as the IV for this operation. The
+     originator encrypts his keyexch structure with key K1, and the answerer
+     encrypts his keyexch structure with key K2.
+  6. The originator sends his encrypted key exchange structure to the
+     answerer. The answerer replieswith his own encrypted key exchange
+     structure.
+  7. Both sides decrypt the key exchange structure received from the other
+     side using K1 or K2 as appropriate.
+  8. Both sides XOR the unencrypted locally generated key exchange structure
+     with the decrypted key exchange structure received from the other side.
+  9. The transmit/receive IV and session key are extracted from the
+     structure resulting from the operation in step 8.
+ 10. The session key is hashed into a key for the selected cipher.
+
+   * Note 1: "selected cipher" refers to one of Blowfish, 3DES, or IDEA. The
+     user can select one of these three ciphers at runtime. Blowfish is used
+     as a default if no selection is made.
+   * Note 2: The 56-byte length of the session key is somewhat arbitrary.
+     The only requirement I can think of for this key is that it be at least
+     as long as the key size of the cipher it is used with.
+
+----------------------------------------------------------------------------
+
+APPENDIX D: Man in the Middle (MITM) attack
+
+By default, Nautilus sets up the encryption key for your conversation using
+Diffie-Hellman (DH) key exchange. DH lets two users (call them Alice and
+Bob) select a random shared encryption key without previously having any
+shared secret information (such as passphrases) and without sending any
+secrets over the communication channel. However, it can be vulnerable to a
+"man-in-the-middle" (MITM) attack where an active eavesdropper (call her
+Eve) can cut the communications channel in the middle and masquerade as
+Alice to Bob, and as Bob to Alice. Now there are three participants and two
+comm links:
+
+     Alice ---------  Eve --------- Bob
+            link 1         link 2
+
+Eve sets up independent DH keys with Alice and Bob (call these keys KA and
+KB). Eve decrypts Alice's remarks with KA, re-encrypts them with KB, and
+relays them to Bob, and vice versa, meanwhile saving copies of the
+unencrypted conversation to pass back to her superiors at the CIA. Alice and
+Bob are blissfully unaware that they're not both using the same key. To
+thwart the MITM attack, Nautilus prints a cryptographic checksum of the
+agreed DH key on the users' screens. At the beginning of the conversation,
+Alice should read this checksum (8 hex digits) to Bob, and Bob should verify
+that it matches the checksum displayed on his screen. This authenticates
+that both users are using the same key, unless the MITM is able to cut into
+the conversation at just the right time and imitate Alice's voice well
+enough to fool Bob into accepting the bogus checksum. This would require Eve
+to be a person rather than a program, and she would need to be listening to
+the conversation in real time and seizing control of it at just the right
+moment, when Bob asks Alice to read the checksum (or if Alice asks Bob, Eve
+has to imitate Bob's voice instead). The checksum approach, we feel, makes
+the MITM attack impractical in almost any realistic situation.
+
+For more info on Diffie-Hellman key exchange, the MITM attack, and almost
+everything else cryptographic, see Applied Cryptography by Bruce Schneier,
+now in its second edition. Errata for these editions is available at
+http://www.counterpane.com.
+
+----------------------------------------------------------------------------
+
+   "If you don't speak out, no one else will.  If you don't lead this
+    effort, no one else will.  For it's a task before all of us..."
+
+                                  -- Robert Fitzgerald Kennedy
+
+----------------------------------------------------------------------------
+
+   "When cryptography is outlawed, only outlaws will have stegonography."
+
+                                  -- Joel McNamara
+
+----------------------------------------------------------------------------
+

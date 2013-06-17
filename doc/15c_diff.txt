@@ -1,0 +1,33 @@
+This file contains the descriptions of all 1.5c deviations from 1.5a.
+
+		/*** NO CRYPTO CODE HAS CHANGED ***/
+
+cli.c		Fixed problem displaying 38400 DTE on DOS (16-bit) machines
+                  and tightened memory security when entering passphrases.
+init.c		Added decoding to CoderSpeedTest() (fixing SP85 bug introduced
+		  in 1.0a) and added support for LOGON_FILE parameter.
+nautilus.h	Added LOGON_FILE and fix to really use UPGRADE_FILE in .cfg.
+sp1bit.c	Pitiful initialization optimization.
+unix.c		Changed Expected/Desired audio params verbosity to a table to
+		  save vertical screen space.  Removed unused variables.
+versions.c	Fixed bug that ignored UPGRADE_FILE in the .cfg
+
+logon.v		Conservatively cut out a little noise from the start and end
+		  (saving 6k).
+makefile.unx	Generalized location of RSAREF directory.
+TODO		Merged stuff from Bill and Dave's wishlists.
+nautilus.doc	Updated with 28.8/Digital Telephony Act/DSS/Schneier stuff.
+
+lpc10/analys.c	1-line header documentation fix from Bill.
+lpc10/bsynz.c	Simplified indexing and looping.
+lpc10/decode.c	1-line header documentation fix from Bill.
+lpc10/difmag.c	Elimination of variables and a decision-reduction.
+lpc10/dyptrk.c	Initialization and indexing calculation reduction.
+lpc10/energy.c	Lame f2c optimization with variable 'speech' (now index 0).
+lpc10/mload.c	Removed simple middle-man variable.
+lpc10/lpfile.c	Just made it look like C (one big addition).
+lpc10/onset.c	Removed middle-man variable, peoffset, and simplified indexing.
+lpc10/synths.c	Fixed ported FORTRAN initialization.
+lpc10/vparms.c	Simplified indexing and changed unnecessary doublereal
+		  conversions to real.
+
